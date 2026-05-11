@@ -1,4 +1,8 @@
 import { Groq } from "groq-sdk";
+import { db } from "@/configs/db";
+import { usersTable, moderationLogsTable } from "@/configs/schema";
+import { eq } from "drizzle-orm";
+import { sendWarningEmail, sendBlockEmail } from "./email";
 
 const groq = new Groq({
     apiKey: process.env.GROQ_API_KEY,
@@ -64,4 +68,74 @@ export async function moderateContent(content: string): Promise<ModerationResult
         // Fallback to allow if AI fails, to avoid blocking legitimate users
         return { isAllowed: true, reason: "Moderation service unavailable" };
     }
+}
+
+/**
+ * Handles the persistence of moderation violations.
+ * Updates user strike count, logs the violation, and returns an error message if blocked.
+ * 
+ * @param email User's email
+ * @param content The flagged content
+ * @param moderation The result from moderateContent
+ * @returns An error message string if violation handled, or null if allowed
+ */
+export async function handleModerationViolation(
+    email: string,
+    content: string,
+    moderation: ModerationResult
+): Promise<string | null> {
+    if (moderation.isAllowed) return null;
+
+    // 1. Fetch current user state
+    const [dbUser] = await db.select().from(usersTable).where(eq(usersTable.email, email));
+    
+    // 2. Increment strikes
+    const newViolationCount = (dbUser?.violationCount || 0) + 1;
+    const isThirdViolation = newViolationCount >= 3;
+    let blockedUntil: Date | null = dbUser?.blockedUntil || null;
+    let newBlockCount = dbUser?.blockCount || 0;
+
+    if (isThirdViolation) {
+        newBlockCount += 1;
+        // Duration: 3 days (1st block), 7 days (2nd), 14*2^n (others)
+        let durationDays = 3;
+        if (newBlockCount === 2) durationDays = 7;
+        else if (newBlockCount >= 3) durationDays = 14 * Math.pow(2, newBlockCount - 3);
+
+        blockedUntil = new Date();
+        blockedUntil.setDate(blockedUntil.getDate() + durationDays);
+        
+        // Send Block Email
+        await sendBlockEmail(email, durationDays, newBlockCount);
+    }
+
+    // 3. Update User Table
+    await db.update(usersTable)
+        .set({ 
+            violationCount: newViolationCount,
+            isBlocked: isThirdViolation,
+            blockedUntil: blockedUntil,
+            blockCount: newBlockCount
+        })
+        .where(eq(usersTable.email, email));
+
+    // 4. Log Violation to moderation_logs
+    await db.insert(moderationLogsTable).values({
+        userEmail: email,
+        reason: moderation.reason,
+        violationType: moderation.violationType || 'other',
+        contentSnippet: content.substring(0, 200)
+    });
+
+    // 5. Send Warning Email
+    await sendWarningEmail(email, moderation.reason, newViolationCount);
+
+    // 6. Generate Error Message for UI
+    let errorMessage = `Content flagged: ${moderation.reason}. This is strike ${newViolationCount}/3. Please stick to academic topics.`;
+    if (isThirdViolation && blockedUntil) {
+        const unlockDate = blockedUntil.toDateString();
+        errorMessage = `Content flagged. Your account is now blocked for ${newBlockCount > 1 ? 'additional ' : ''}violations. Access restored on ${unlockDate}.`;
+    }
+
+    return errorMessage;
 }

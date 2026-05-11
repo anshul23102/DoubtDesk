@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { SignedIn, UserButton, useClerk } from "@clerk/nextjs"
 import Sidebar from "@/components/Sidebar"
-import { Menu, LogOut } from "lucide-react"
+import { Menu, LogOut, User } from "lucide-react"
 import Link from "next/link"
 import {
     AlertDialog,
@@ -50,7 +50,10 @@ export default function DashboardLayout({
 
                         <div className="flex items-center gap-4">
                             <SignedIn>
-                                <div className="flex items-center gap-3">
+                                <div className="flex items-center gap-4">
+                                    <Link href="/profile" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">
+                                        Profile
+                                    </Link>
                                     <UserButton
                                         appearance={{
                                             elements: {
@@ -65,6 +68,11 @@ export default function DashboardLayout({
                                         }}
                                     >
                                         <UserButton.MenuItems>
+                                            <UserButton.Link
+                                                label="Profile"
+                                                labelIcon={<User className="w-4 h-4" />}
+                                                href="/profile"
+                                            />
                                             <UserButton.Action
                                                 label="Sign Out"
                                                 labelIcon={<LogOut className="w-4 h-4" />}
