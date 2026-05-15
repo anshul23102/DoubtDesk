@@ -185,6 +185,14 @@ export default function AskAIView({ classroomId = null, onSuccess, initialDoubt 
                             <textarea
                                 value={prompt}
                                 onChange={(e) => setPrompt(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+                                        e.preventDefault();
+                                        if (prompt.trim() || imageBase64) {
+                                            handleAskAI('standard');
+                                        }
+                                    }
+                                }}
                                 placeholder="Type your doubt here..."
                                 rows={4}
                                 className="w-full bg-slate-950/60 border border-white/8 rounded-2xl px-5 py-4 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all resize-none font-medium text-sm leading-relaxed"
