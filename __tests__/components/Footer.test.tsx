@@ -6,13 +6,30 @@ describe('Footer Component', () => {
     it('renders platform name and tagline', () => {
         render(<Footer />);
         expect(screen.getByText('DoubtDesk')).toBeInTheDocument();
-        expect(screen.getByText('Simplifying classroom doubt solving with AI.')).toBeInTheDocument();
+        expect(screen.getByText(/Simplifying classroom doubt solving with AI-powered collaboration/)).toBeInTheDocument();
     });
 
-    it('renders navigation links', () => {
+    it('renders navigation links to existing pages', () => {
         render(<Footer />);
-        expect(screen.getByText('Dashboard')).toBeInTheDocument();
-        expect(screen.getByText('Virtual Campus')).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: 'Dashboard' })).toHaveAttribute('href', '/dashboard');
+        expect(screen.getByRole('link', { name: 'Virtual Campus' })).toHaveAttribute('href', '/rooms');
+        expect(screen.getByRole('link', { name: 'AI Solver' })).toHaveAttribute('href', '/ask-ai');
+        expect(screen.getByRole('link', { name: 'Analytics' })).toHaveAttribute('href', '/dashboard/analytics');
+        expect(screen.getByRole('link', { name: 'Public Doubts' })).toHaveAttribute('href', '/public-rooms');
+        expect(screen.getByRole('link', { name: 'Bookmarks' })).toHaveAttribute('href', '/bookmarks');
+    });
+
+    it('does not render links for unimplemented standalone pages', () => {
+        render(<Footer />);
+        expect(screen.queryByRole('link', { name: 'Help Center' })).not.toBeInTheDocument();
+        expect(screen.queryByRole('link', { name: 'Discussions' })).not.toBeInTheDocument();
+        expect(screen.queryByRole('link', { name: 'Leaderboard' })).not.toBeInTheDocument();
+        expect(screen.queryByRole('link', { name: 'Contributors' })).not.toBeInTheDocument();
+    });
+
+    it('uses a working contact destination instead of a missing contact page', () => {
+        render(<Footer />);
+        expect(screen.getByRole('link', { name: 'Contact' })).toHaveAttribute('href', 'mailto:karankmt.tripathi@gmail.com');
     });
 
     it('renders current year copyright', () => {
