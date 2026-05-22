@@ -3,7 +3,7 @@ import { Home, AlertCircle } from 'lucide-react';
 
 export default function NotFound() {
     return (
-        <div className="min-h-screen bg-[#020617] flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
+        <div className="min-h-screen bg-slate-50 dark:bg-[#020617] flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
             {/* Ambient Background Glows */}
             <div className="absolute top-1/4 -left-20 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
             <div className="absolute bottom-1/4 -right-20 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[120px] pointer-events-none" />
@@ -23,11 +23,11 @@ export default function NotFound() {
 
                 {/* Message Content */}
                 <div className="space-y-4">
-                    <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
+                    <h2 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
                         LOST IN THE <br />
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 uppercase italic pr-2">Knowledge Base?</span>
                     </h2>
-                    <p className="text-slate-400 text-lg font-medium max-w-md mx-auto leading-relaxed">
+                    <p className="text-slate-600 dark:text-slate-400 text-lg font-medium max-w-md mx-auto leading-relaxed">
                         The resource you're searching for has moved to another dimension. Let's get your learning back on track.
                     </p>
                 </div>
@@ -36,7 +36,7 @@ export default function NotFound() {
                 <div className="pt-6">
                     <Link
                         href="/"
-                        className="inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white rounded-3xl font-black uppercase tracking-widest text-xs transition-all shadow-2xl shadow-blue-500/20 active:scale-95 group border border-white/10"
+                        className="inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-slate-900 dark:text-white rounded-3xl font-black uppercase tracking-widest text-xs transition-all shadow-2xl shadow-blue-500/20 active:scale-95 group border border-slate-200 dark:border-white/10"
                     >
                         <Home className="w-4 h-4 transition-transform group-hover:-translate-y-1" />
                         Return to Dashboard

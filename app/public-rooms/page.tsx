@@ -79,12 +79,12 @@ export default function PublicRoomsPage() {
 
     return (
         <div className="p-4 md:p-8 space-y-6 max-w-[1000px] mx-auto pb-24">
-            <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-white/5">
+            <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-slate-200 dark:border-white/5">
                 <div className="space-y-1">
-                    <h1 className="text-6xl font-black text-white tracking-tighter uppercase italic">
+                    <h1 className="text-6xl font-black text-slate-900 dark:text-white tracking-tighter uppercase italic">
                         Public<span className="text-blue-500"> Doubts</span>
                     </h1>
-                    <p className="text-slate-400 text-lg font-medium tracking-tight">
+                    <p className="text-slate-600 dark:text-slate-400 text-lg font-medium tracking-tight">
                         Collaborate with student community. <span className="text-blue-400/80 font-bold">Ask, Solve, Learn anonymously.</span>
                     </p>
                 </div>
@@ -99,7 +99,7 @@ export default function PublicRoomsPage() {
 
             {/* Filter Section */}
             <div className="flex items-center gap-4 overflow-x-auto pb-2 scrollbar-hide">
-                <div className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-slate-500">
+                <div className="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-slate-500 dark:text-slate-500">
                     <SlidersHorizontal className="w-4 h-4" />
                     <span className="text-[10px] font-black uppercase tracking-widest">Filter:</span>
                 </div>
@@ -115,11 +115,7 @@ export default function PublicRoomsPage() {
                                 setIsOthersActive(true);
                             }
                         }}
-                        className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border shrink-0 ${
-                            filter === f
-                            ? "bg-blue-600 border-blue-500 text-white shadow-lg shadow-blue-600/20"
-                            : "bg-white/5 border-white/10 text-slate-400 hover:bg-white/10 hover:text-white"
-                        }`}
+                        className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border shrink-0 ${ filter === f ? "bg-blue-600 border-blue-500 text-white shadow-lg shadow-blue-600/20" : "bg-white/5 border-white/10 text-slate-400 hover:bg-white/10 hover:text-white" }`}
                     >
                         {f}
                     </button>
@@ -136,11 +132,11 @@ export default function PublicRoomsPage() {
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') setAppliedCustomFilter(customFilter);
                             }}
-                            className="bg-slate-900 border border-blue-500/30 rounded-xl px-4 py-2 text-[10px] font-bold text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500 transition-all w-40"
+                            className="bg-white dark:bg-slate-900 border border-blue-500/30 rounded-xl px-4 py-2 text-[10px] font-bold text-slate-900 dark:text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500 transition-all w-40"
                         />
                         <button 
                             onClick={() => setAppliedCustomFilter(customFilter)}
-                            className="px-4 py-2 bg-blue-600/10 text-blue-400 hover:bg-blue-600 hover:text-white border border-blue-500/20 rounded-xl text-[8px] font-black uppercase tracking-widest transition-all"
+                            className="px-4 py-2 bg-blue-600/10 text-blue-400 hover:bg-blue-600 hover:text-slate-900 dark:hover:text-white border border-blue-500/20 rounded-xl text-[8px] font-black uppercase tracking-widest transition-all"
                         >
                             Apply
                         </button>
@@ -156,11 +152,11 @@ export default function PublicRoomsPage() {
                         onKeyDown={(e) => {
                             if (e.key === "Enter") fetchDoubts();
                         }}
-                        className="bg-slate-900 border border-white/10 rounded-xl px-4 py-2 text-[10px] font-bold text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500 transition-all w-40"
+                        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-2 text-[10px] font-bold text-slate-900 dark:text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500 transition-all w-40"
                     />
                     <button
                         onClick={fetchDoubts}
-                        className="px-4 py-2 bg-white/5 text-slate-300 hover:bg-blue-600 hover:text-white border border-white/10 rounded-xl text-[8px] font-black uppercase tracking-widest transition-all"
+                        className="px-4 py-2 bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-300 hover:bg-blue-600 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/10 rounded-xl text-[8px] font-black uppercase tracking-widest transition-all"
                     >
                         Tag
                     </button>
@@ -170,13 +166,13 @@ export default function PublicRoomsPage() {
             {isLoading && doubts.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-20 space-y-4">
                     <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                    <p className="text-slate-500 font-bold uppercase tracking-widest text-xs">Syncing with community...</p>
+                    <p className="text-slate-500 dark:text-slate-500 font-bold uppercase tracking-widest text-xs">Syncing with community...</p>
                 </div>
             ) : doubts.length > 0 ? (
                 <>
                     <div className="flex flex-col gap-6 lg:gap-8">
-                        {doubts.map((doubt: any) => (
-                            <DoubtCard key={doubt.id} doubt={doubt} onUpdate={() => mutate()} />
+                        {doubts.map((doubt: any, index: number) => (
+                            <DoubtCard key={`${doubt.id}-${index}`} doubt={doubt} onUpdate={() => mutate()} />
                         ))}
                     </div>
                     <div ref={loadMoreRef} className="py-8 flex justify-center">
@@ -185,7 +181,7 @@ export default function PublicRoomsPage() {
                 </>
             ) : (
 
-                <div className="relative flex flex-col items-center justify-center py-20 rounded-[3rem] text-center px-6 overflow-hidden border border-white/5">
+                <div className="relative flex flex-col items-center justify-center py-20 rounded-[3rem] text-center px-6 overflow-hidden border border-slate-200 dark:border-white/5">
                 {/* Layered gradient background */}
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-950/40 via-slate-900/20 to-indigo-950/30 rounded-[3rem]" />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent rounded-[3rem]" />
@@ -230,11 +226,11 @@ export default function PublicRoomsPage() {
 
                 {/* Copy */}
                 <div className="relative z-10 space-y-3 mb-8">
-                    <h2 className="text-3xl font-black text-white tracking-tighter leading-tight">
+                    <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-tight">
                         {randomMessage.headline}{" "}
                         <span className="text-blue-400">{randomMessage.accent}</span>
                     </h2>
-                    <p className="text-slate-400 max-w-sm mx-auto text-sm leading-relaxed">
+                    <p className="text-slate-600 dark:text-slate-400 max-w-sm mx-auto text-sm leading-relaxed">
                         {filter === "All"
                             ? randomMessage.sub
                             : `${filter} is wide open. Drop a doubt, and watch your classmates rally around it.`}

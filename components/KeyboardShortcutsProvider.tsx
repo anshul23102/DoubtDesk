@@ -64,22 +64,22 @@ function KeyboardShortcutsHelp({ isOpen, onOpenChange }: { isOpen: boolean, onOp
 
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-[425px] bg-[#0f172a] border-white/10 text-white rounded-[2rem]">
+            <DialogContent className="sm:max-w-[425px] bg-[#0f172a] border-slate-200 dark:border-white/10 text-slate-900 dark:text-white rounded-[2rem]">
                 <DialogHeader>
                     <DialogTitle className="text-2xl font-black uppercase italic tracking-tight">Keyboard <span className="text-blue-500">Shortcuts</span></DialogTitle>
-                    <DialogDescription className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">
+                    <DialogDescription className="text-slate-500 dark:text-slate-500 font-bold uppercase tracking-widest text-[10px]">
                         Boost your productivity with these shortcuts
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                     {shortcuts.map((shortcut, i) => (
-                        <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5">
-                            <span className="text-sm font-medium text-slate-300">{shortcut.description}</span>
+                        <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
+                            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{shortcut.description}</span>
                             <div className="flex gap-1">
                                 {shortcut.key.split(" + ").map((k, j) => (
                                     <React.Fragment key={j}>
                                         <Kbd>{k}</Kbd>
-                                        {j < shortcut.key.split(" + ").length - 1 && <span className="text-slate-500 self-center mx-1">+</span>}
+                                        {j < shortcut.key.split(" + ").length - 1 && <span className="text-slate-500 dark:text-slate-500 self-center mx-1">+</span>}
                                     </React.Fragment>
                                 ))}
                             </div>

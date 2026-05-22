@@ -27,7 +27,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data }) => {
                                 <span>{personalInfo.phone}</span>
                             </div>
                         )}
-                        {personalInfo.phone && personalInfo.email && <span className="text-slate-200">|</span>}
+                        {personalInfo.phone && personalInfo.email && <span className="text-slate-800 dark:text-slate-200">|</span>}
                         {personalInfo.email && (
                             <div className="flex items-center gap-1.5">
                                 <Mail className="w-3 h-3 fill-slate-700" />
@@ -43,7 +43,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data }) => {
                                 <span className="hover:underline">{cleanUrl(personalInfo.linkedin)}</span>
                             </div>
                         )}
-                        {personalInfo.linkedin && personalInfo.github && <span className="text-slate-200">|</span>}
+                        {personalInfo.linkedin && personalInfo.github && <span className="text-slate-800 dark:text-slate-200">|</span>}
                         {personalInfo.github && (
                             <div className="flex items-center gap-1.5">
                                 <Github className="w-3 h-3 fill-slate-700" />
@@ -72,13 +72,13 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data }) => {
                                 <div key={idx} className={`${idx > 0 ? "pt-3 border-t border-slate-100" : ""}`}>
                                     <div className="flex justify-between items-baseline mb-0.5">
                                         <h3 className="text-[11px] font-bold text-slate-900">{exp.role || "Role"}</h3>
-                                        <span className="text-[10px] font-bold text-slate-500 italic">{exp.startDate} — {exp.endDate}</span>
+                                        <span className="text-[10px] font-bold text-slate-500 dark:text-slate-500 italic">{exp.startDate} — {exp.endDate}</span>
                                     </div>
                                     <h4 className="text-[10px] font-semibold text-slate-700 italic mb-2">{exp.company || "Company"}</h4>
                                     <div className="space-y-1.5 pl-2">
                                         {exp.description.split('\n').filter(p => p.trim()).map((point, pIdx) => (
                                             <div key={pIdx} className="flex gap-2.5">
-                                                <span className="text-[9px] mt-1.5 text-slate-400">•</span>
+                                                <span className="text-[9px] mt-1.5 text-slate-600 dark:text-slate-400">•</span>
                                                 <p className="text-[10px] leading-snug text-slate-700">
                                                     {point}
                                                 </p>
@@ -116,7 +116,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data }) => {
                                     <div className="space-y-1.5 pl-2">
                                         {project.description.split('\n').filter(p => p.trim()).map((point, pIdx) => (
                                             <div key={pIdx} className="flex gap-2.5">
-                                                <span className="text-[9px] mt-1.5 text-slate-400">•</span>
+                                                <span className="text-[9px] mt-1.5 text-slate-600 dark:text-slate-400">•</span>
                                                 <p className="text-[10px] leading-snug text-slate-700">
                                                     {point}
                                                 </p>
@@ -138,7 +138,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data }) => {
                                 <div key={idx} className="">
                                     <div className="flex justify-between items-baseline mb-0.5">
                                         <h3 className="text-[11px] font-bold text-slate-900">{edu.institution || "Institution"}</h3>
-                                        <span className="text-[10px] font-bold text-slate-500 italic">{edu.startDate} — {edu.endDate}</span>
+                                        <span className="text-[10px] font-bold text-slate-500 dark:text-slate-500 italic">{edu.startDate} — {edu.endDate}</span>
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <span className="text-[10px] font-medium text-slate-700 italic">{edu.degree}</span>
@@ -174,18 +174,18 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data }) => {
                                 <div key={iIdx} className="">
                                     <div className="flex justify-between items-baseline mb-0.5">
                                         {item.title && <h3 className="text-[11px] font-bold text-slate-900">{item.title}</h3>}
-                                        {item.date && <span className="text-[10px] font-bold text-slate-500 italic">{item.date}</span>}
+                                        {item.date && <span className="text-[10px] font-bold text-slate-500 dark:text-slate-500 italic">{item.date}</span>}
                                     </div>
                                     {(item.subtitle || item.location) && (
                                         <div className="flex justify-between items-baseline mb-2">
                                             {item.subtitle && <span className="text-[10px] font-semibold text-slate-700 italic">{item.subtitle}</span>}
-                                            {item.location && <span className="text-[10px] text-slate-500 font-medium">{item.location}</span>}
+                                            {item.location && <span className="text-[10px] text-slate-500 dark:text-slate-500 font-medium">{item.location}</span>}
                                         </div>
                                     )}
                                     <div className="space-y-1.5 pl-2">
                                         {item.description.split('\n').filter(p => p.trim()).map((point, pIdx) => (
                                             <div key={pIdx} className="flex gap-2.5">
-                                                <span className="text-[9px] mt-1.5 text-slate-400">•</span>
+                                                <span className="text-[9px] mt-1.5 text-slate-600 dark:text-slate-400">•</span>
                                                 <p className="text-[10px] leading-snug text-slate-700">
                                                     {point}
                                                 </p>

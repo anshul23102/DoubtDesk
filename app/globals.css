@@ -83,54 +83,6 @@ body {
   transition-timing-function: ease;
 }
 
-html.light [class~="bg-[#020617]"],
-html.light [class~="bg-slate-950"],
-html.light [class~="bg-slate-950/80"],
-html.light [class~="bg-[#040B1A]/88"],
-html.light [class~="supports-[backdrop-filter]:bg-[#040B1A]/72"] {
-  background-color: hsl(var(--background));
-}
-
-html.light [class~="bg-slate-900"],
-html.light [class~="bg-slate-900/40"],
-html.light [class~="bg-slate-900/50"],
-html.light [class~="bg-slate-900/60"],
-html.light [class~="bg-slate-800/80"],
-html.light [class~="bg-white/5"],
-html.light [class~="bg-white/[0.08]"],
-html.light [class~="bg-white/10"] {
-  background-color: hsl(var(--card));
-}
-
-html.light [class~="border-white/5"],
-html.light [class~="border-white/8"],
-html.light [class~="border-white/10"],
-html.light [class~="border-white/20"] {
-  border-color: hsl(var(--border));
-}
-
-html.light [class~="text-white"],
-html.light [class~="text-slate-100"],
-html.light [class~="text-slate-200"],
-html.light [class~="text-slate-300"] {
-  color: hsl(var(--foreground));
-}
-
-html.light [class~="text-slate-400"],
-html.light [class~="text-slate-500"],
-html.light [class~="text-slate-600"] {
-  color: hsl(var(--muted-foreground));
-}
-
-html.light [class~="bg-blue-600"][class~="text-white"],
-html.light [class~="bg-cyan-600"][class~="text-white"],
-html.light [class~="bg-red-600"][class~="text-white"],
-html.light [class~="bg-[#5E8CFF]"][class~="text-white"],
-html.light [class~="from-blue-600"][class~="text-white"],
-html.light [class~="from-cyan-600"][class~="text-white"] {
-  color: #fff;
-}
-
 /* Custom Scrollbar Styling */
 ::-webkit-scrollbar {
   width: 10px;

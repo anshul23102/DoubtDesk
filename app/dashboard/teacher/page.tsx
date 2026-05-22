@@ -34,16 +34,16 @@ export default function TeacherDashboard() {
         );
     }
 
-    if (!data) return <div className="text-white text-center py-10 font-bold uppercase tracking-widest text-xs">Failed to load analytics</div>;
+    if (!data) return <div className="text-slate-900 dark:text-white text-center py-10 font-bold uppercase tracking-widest text-xs">Failed to load analytics</div>;
 
     return (
         <div className="space-y-8 animate-in fade-in duration-700">
             {/* Header */}
             <div>
-                <h1 className="text-3xl font-black text-white italic tracking-tighter uppercase">
+                <h1 className="text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">
                     Classroom <span className="text-blue-500">Insights</span>
                 </h1>
-                <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.3em] mt-1 flex items-center gap-2">
+                <p className="text-slate-500 dark:text-slate-500 text-[10px] font-black uppercase tracking-[0.3em] mt-1 flex items-center gap-2">
                     <Users className="w-3 h-3" /> Real-time Student Confusion Metrics
                 </p>
             </div>
@@ -55,14 +55,14 @@ export default function TeacherDashboard() {
                     { label: "Most Active Room", value: data.subjectVolume[0]?.subject || "N/A", icon: TrendingUp, color: "text-blue-400", bg: "bg-blue-500/10" },
                     { label: "Resolution Rate", value: `${Math.round((data.statusDistribution.find((s: any) => s.status === "solved")?.count || 0) / (data.statusDistribution.reduce((a: any, b: any) => a + b.count, 0) || 1) * 100)}%`, icon: CheckCircle2, color: "text-emerald-400", bg: "bg-emerald-500/10" }
                 ].map((stat, i) => (
-                    <div key={i} className="bg-slate-900/50 border border-white/5 rounded-3xl p-6 hover:border-white/10 transition-colors">
+                    <div key={i} className="bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-white/5 rounded-3xl p-6 hover:border-slate-200 dark:hover:border-white/10 transition-colors">
                         <div className="flex items-center gap-4">
                             <div className={`p-4 ${stat.bg} rounded-2xl`}>
                                 <stat.icon className={`w-6 h-6 ${stat.color}`} />
                             </div>
                             <div>
-                                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">{stat.label}</p>
-                                <p className="text-xl font-bold text-white mt-1">{stat.value}</p>
+                                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-500">{stat.label}</p>
+                                <p className="text-xl font-bold text-slate-900 dark:text-white mt-1">{stat.value}</p>
                             </div>
                         </div>
                     </div>
@@ -71,8 +71,8 @@ export default function TeacherDashboard() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Bar Chart: Confusion Topics */}
-                <div className="bg-slate-900 border border-white/5 rounded-[2.5rem] p-8">
-                    <h3 className="text-sm font-black text-white uppercase tracking-widest mb-6 px-2">Top Confusion Topics</h3>
+                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-[2.5rem] p-8">
+                    <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest mb-6 px-2">Top Confusion Topics</h3>
                     <div className="h-[300px] w-full">
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={data.topTopics}>
@@ -90,8 +90,8 @@ export default function TeacherDashboard() {
                 </div>
 
                 {/* Pie Chart: Solved vs Unsolved */}
-                <div className="bg-slate-900 border border-white/5 rounded-[2.5rem] p-8">
-                    <h3 className="text-sm font-black text-white uppercase tracking-widest mb-6 px-2">Doubt Status</h3>
+                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-[2.5rem] p-8">
+                    <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest mb-6 px-2">Doubt Status</h3>
                     <div className="h-[300px] w-full">
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
@@ -113,7 +113,7 @@ export default function TeacherDashboard() {
                                     contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
                                     itemStyle={{ fontSize: '10px', fontWeight: 'bold' }}
                                 />
-                                <Legend verticalAlign="bottom" height={36} formatter={(value) => <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{value}</span>} />
+                                <Legend verticalAlign="bottom" height={36} formatter={(value) => <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-400">{value}</span>} />
                             </PieChart>
                         </ResponsiveContainer>
                     </div>
@@ -121,30 +121,30 @@ export default function TeacherDashboard() {
             </div>
 
             {/* Subject Volume Table */}
-            <div className="bg-slate-900/50 border border-white/5 rounded-[2.5rem] overflow-hidden">
-                <div className="p-8 border-b border-white/5">
-                    <h3 className="text-sm font-black text-white uppercase tracking-widest">Doubt Volume by Subject</h3>
+            <div className="bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-white/5 rounded-[2.5rem] overflow-hidden">
+                <div className="p-8 border-b border-slate-200 dark:border-white/5">
+                    <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">Doubt Volume by Subject</h3>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
                         <thead>
-                            <tr className="border-b border-white/5 bg-white/[0.02]">
-                                <th className="px-8 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest">Subject</th>
-                                <th className="px-8 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest">Doubt Count</th>
-                                <th className="px-8 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest">Engagement</th>
+                            <tr className="border-b border-slate-200 dark:border-white/5 bg-white/[0.02]">
+                                <th className="px-8 py-4 text-[10px] font-black text-slate-500 dark:text-slate-500 uppercase tracking-widest">Subject</th>
+                                <th className="px-8 py-4 text-[10px] font-black text-slate-500 dark:text-slate-500 uppercase tracking-widest">Doubt Count</th>
+                                <th className="px-8 py-4 text-[10px] font-black text-slate-500 dark:text-slate-500 uppercase tracking-widest">Engagement</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">
                             {data.subjectVolume.map((item: any, i: number) => (
                                 <tr key={i} className="hover:bg-white/[0.02] transition-colors">
                                     <td className="px-8 py-4">
-                                        <span className="text-sm font-bold text-white">{item.subject}</span>
+                                        <span className="text-sm font-bold text-slate-900 dark:text-white">{item.subject}</span>
                                     </td>
                                     <td className="px-8 py-4">
                                         <span className="text-sm font-bold text-blue-400">{item.count}</span>
                                     </td>
                                     <td className="px-8 py-4">
-                                        <div className="w-24 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                                        <div className="w-24 h-1.5 bg-slate-50 dark:bg-slate-800 rounded-full overflow-hidden">
                                             <div
                                                 className="h-full bg-blue-500"
                                                 style={{ width: `${(item.count / data.subjectVolume.reduce((a: any, b: any) => a + b.count, 0)) * 100}%` }}

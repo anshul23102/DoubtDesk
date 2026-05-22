@@ -32,14 +32,14 @@ export default function BookmarksPage() {
     }, []);
 
     return (
-        <div className="min-h-screen bg-[#020617] text-white p-8">
+        <div className="min-h-screen bg-slate-50 dark:bg-[#020617] text-slate-900 dark:text-white p-8">
             <div className="max-w-7xl mx-auto space-y-12">
                 {/* Header */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div className="space-y-2">
                         <button
                             onClick={() => router.back()}
-                            className="flex items-center gap-2 text-slate-500 hover:text-white transition-colors text-sm font-bold uppercase tracking-widest mb-4"
+                            className="flex items-center gap-2 text-slate-500 dark:text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors text-sm font-bold uppercase tracking-widest mb-4"
                         >
                             <ArrowLeft className="w-4 h-4" /> Back
                         </button>
@@ -51,7 +51,7 @@ export default function BookmarksPage() {
                                 <h1 className="text-4xl md:text-5xl font-black italic tracking-tighter uppercase">
                                     Your <span className="text-purple-500 text-shadow-glow">Bookmarks</span>
                                 </h1>
-                                <p className="text-slate-500 font-bold uppercase tracking-[0.2em] text-xs">
+                                <p className="text-slate-500 dark:text-slate-500 font-bold uppercase tracking-[0.2em] text-xs">
                                     Saved doubts for quick reference
                                 </p>
                             </div>
@@ -63,7 +63,7 @@ export default function BookmarksPage() {
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-32 space-y-4">
                         <Loader2 className="w-12 h-12 text-purple-500 animate-spin" />
-                        <p className="text-slate-500 font-black uppercase tracking-widest text-xs">Loading your saved doubts...</p>
+                        <p className="text-slate-500 dark:text-slate-500 font-black uppercase tracking-widest text-xs">Loading your saved doubts...</p>
                     </div>
                 ) : bookmarks.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -77,12 +77,12 @@ export default function BookmarksPage() {
                         ))}
                     </div>
                 ) : (
-                    <div className="flex flex-col items-center justify-center py-32 bg-slate-900/20 border border-dashed border-white/5 rounded-[3rem] text-center px-6">
-                        <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mb-8">
+                    <div className="flex flex-col items-center justify-center py-32 bg-slate-900/20 border border-dashed border-slate-200 dark:border-white/5 rounded-[3rem] text-center px-6">
+                        <div className="w-24 h-24 bg-slate-100 dark:bg-white/5 rounded-full flex items-center justify-center mb-8">
                             <Bookmark className="w-10 h-10 text-slate-700" />
                         </div>
-                        <h3 className="text-2xl font-black text-white uppercase italic mb-4">No Bookmarks Yet</h3>
-                        <p className="text-slate-500 max-w-md mx-auto font-medium leading-relaxed mb-8 text-sm">
+                        <h3 className="text-2xl font-black text-slate-900 dark:text-white uppercase italic mb-4">No Bookmarks Yet</h3>
+                        <p className="text-slate-500 dark:text-slate-500 max-w-md mx-auto font-medium leading-relaxed mb-8 text-sm">
                             You haven't bookmarked any doubts yet. Click the bookmark icon on any doubt to save it here for later!
                         </p>
                         <button

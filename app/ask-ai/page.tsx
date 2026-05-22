@@ -156,27 +156,27 @@ export default function AskAIPage() {
                         <span className="flex items-center justify-center w-7 h-7 rounded-full bg-cyan-500/20 border border-cyan-500/40 text-cyan-400 text-xs font-black shrink-0 shadow-sm">
                             {num}
                         </span>
-                        <span className="text-[15px] font-black text-white tracking-tight leading-tight">{label}</span>
+                        <span className="text-[15px] font-black text-slate-900 dark:text-white tracking-tight leading-tight">{label}</span>
                         <button 
                             onClick={() => handleStepFollowUp(num, label)}
-                            className="ml-auto opacity-0 group-hover/step:opacity-100 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 hover:bg-cyan-500/10 border border-white/5 hover:border-cyan-500/30 text-[10px] font-black text-slate-400 hover:text-cyan-400 transition-all uppercase tracking-wider"
+                            className="ml-auto opacity-0 group-hover/step:opacity-100 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-white/5 hover:bg-cyan-500/10 border border-slate-200 dark:border-white/5 hover:border-cyan-500/30 text-[10px] font-black text-slate-600 dark:text-slate-400 hover:text-cyan-400 transition-all uppercase tracking-wider"
                         >
                             <MessageSquare className="w-3 h-3" /> Ask about this
                         </button>
                     </span>
                 );
             }
-            return <strong className="text-white font-bold">{children}</strong>;
+            return <strong className="text-slate-900 dark:text-white font-bold">{children}</strong>;
         },
 
         // Paragraphs: left-aligned, proper spacing
         p: ({ children }: any) => (
-            <p className="text-slate-300 leading-[1.9] font-medium my-3 text-[15px] pl-0">{children}</p>
+            <p className="text-slate-700 dark:text-slate-300 leading-[1.9] font-medium my-3 text-[15px] pl-0">{children}</p>
         ),
 
         // List items
         li: ({ children }: any) => (
-            <li className="text-slate-300 leading-relaxed font-medium my-1.5 text-[15px]">{children}</li>
+            <li className="text-slate-700 dark:text-slate-300 leading-relaxed font-medium my-1.5 text-[15px]">{children}</li>
         ),
 
         // Ordered list — indent cleanly
@@ -193,7 +193,7 @@ export default function AskAIPage() {
         div: ({ className, children, ...props }: any) => {
             if (className?.includes('math-display')) {
                 return (
-                    <div className="my-4 pl-4 border-l-2 border-cyan-500/40 bg-slate-950/50 rounded-r-xl py-4 pr-4 overflow-x-auto">
+                    <div className="my-4 pl-4 border-l-2 border-cyan-500/40 bg-white/50 dark:bg-slate-950/50 rounded-r-xl py-4 pr-4 overflow-x-auto">
                         <div className={className} {...props}>{children}</div>
                     </div>
                 );
@@ -203,12 +203,12 @@ export default function AskAIPage() {
 
         // Tables — beautifully styled
         table: ({ children }: any) => (
-            <div className="my-5 overflow-x-auto rounded-2xl border border-white/8 shadow-lg">
+            <div className="my-5 overflow-x-auto rounded-2xl border border-slate-200 dark:border-white/8 shadow-lg">
                 <table className="w-full text-sm text-left">{children}</table>
             </div>
         ),
         thead: ({ children }: any) => (
-            <thead className="bg-slate-800/80 border-b border-white/8">{children}</thead>
+            <thead className="bg-slate-50/80 dark:bg-slate-800/80 border-b border-slate-200 dark:border-white/8">{children}</thead>
         ),
         tbody: ({ children }: any) => (
             <tbody className="divide-y divide-white/5">{children}</tbody>
@@ -217,10 +217,10 @@ export default function AskAIPage() {
             <tr className="hover:bg-white/3 transition-colors">{children}</tr>
         ),
         th: ({ children }: any) => (
-            <th className="px-4 py-3 text-xs font-black text-slate-300 uppercase tracking-widest whitespace-nowrap">{children}</th>
+            <th className="px-4 py-3 text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest whitespace-nowrap">{children}</th>
         ),
         td: ({ children }: any) => (
-            <td className="px-4 py-3 text-slate-300 font-medium text-[14px] [&_.katex]:text-slate-100">{children}</td>
+            <td className="px-4 py-3 text-slate-700 dark:text-slate-300 font-medium text-[14px] [&_.katex]:text-slate-900 dark:[&_.katex]:text-white">{children}</td>
         ),
 
         // Blockquote — highlighted note
@@ -232,19 +232,19 @@ export default function AskAIPage() {
     };
 
     return (
-        <div className="flex min-h-screen bg-[#020617] text-white min-w-0">
+        <div className="flex min-h-screen bg-slate-50 dark:bg-[#020617] text-slate-900 dark:text-white min-w-0">
             <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
             <main className="flex-1 flex flex-col min-w-0">
                 {/* Mobile Header */}
-                <header className="flex lg:hidden items-center gap-3 px-4 py-3 border-b border-white/5 bg-slate-950/80 backdrop-blur-xl sticky top-0 z-20">
-                    <button onClick={() => setIsSidebarOpen(true)} className="p-2 hover:bg-white/5 rounded-lg" aria-label="Open sidebar">
+                <header className="flex lg:hidden items-center gap-3 px-4 py-3 border-b border-slate-200 dark:border-white/5 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl sticky top-0 z-20">
+                    <button onClick={() => setIsSidebarOpen(true)} className="p-2 hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg" aria-label="Open sidebar">
                         <div className="w-5 h-0.5 bg-white mb-1 rounded" /><div className="w-5 h-0.5 bg-white mb-1 rounded" /><div className="w-5 h-0.5 bg-white rounded" />
                     </button>
                     <div className="w-8 h-8 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center">
-                        <Zap className="w-4 h-4 text-white" />
+                        <Zap className="w-4 h-4 text-slate-900 dark:text-white" />
                     </div>
-                    <span className="font-bold text-white">Ask AI Solver</span>
+                    <span className="font-bold text-slate-900 dark:text-white">Ask AI Solver</span>
                 </header>
 
                 <div className="max-w-[900px] mx-auto w-full px-4 sm:px-8 py-8 pb-6 space-y-6">
@@ -254,19 +254,19 @@ export default function AskAIPage() {
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-[11px] font-black uppercase tracking-widest">
                             <Zap className="w-3 h-3" /> Powered by Groq AI
                         </div>
-                        <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tighter">
+                        <h1 className="text-4xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tighter">
                             AI Instant <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Doubt Solver</span>
                         </h1>
-                        <p className="text-slate-400 text-base max-w-lg leading-relaxed">
+                        <p className="text-slate-600 dark:text-slate-400 text-base max-w-lg leading-relaxed">
                             Type your doubt or upload a photo of your question. Get structured, step-by-step explanations instantly.
                         </p>
                     </div>
 
                     {/* ── Input Card ── */}
-                    <div className="bg-slate-900/60 border border-white/8 rounded-3xl overflow-hidden shadow-2xl">
+                    <div className="bg-white/60 dark:bg-slate-900/60 border border-slate-200 dark:border-white/8 rounded-3xl overflow-hidden shadow-2xl">
 
                         {/* Mode Tabs */}
-                        <div className="flex border-b border-white/5">
+                        <div className="flex border-b border-slate-200 dark:border-white/5">
                             <button
                                 onClick={() => { setInputMode('text'); setImageBase64(null); }}
                                 className={`flex-1 flex items-center justify-center gap-2 py-4 text-sm font-bold transition-all ${inputMode === 'text' ? 'text-cyan-400 border-b-2 border-cyan-500 bg-cyan-500/5' : 'text-slate-500 hover:text-slate-300'}`}
@@ -291,7 +291,7 @@ export default function AskAIPage() {
                                         onKeyDown={(e) => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) handleAskAI(); }}
                                         placeholder="e.g. How do I solve x² - 5x + 6 = 0?   (Ctrl+Enter to submit)"
                                         rows={4}
-                                        className="w-full bg-slate-950/60 border border-white/8 rounded-2xl px-5 py-4 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/40 focus:border-cyan-500/40 transition-all resize-none font-medium text-[15px] leading-relaxed"
+                                        className="w-full bg-white/60 dark:bg-slate-950/60 border border-slate-200 dark:border-white/8 rounded-2xl px-5 py-4 text-slate-900 dark:text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/40 focus:border-cyan-500/40 transition-all resize-none font-medium text-[15px] leading-relaxed"
                                         disabled={isLoading}
                                     />
                                     {/* Example Pills */}
@@ -300,7 +300,7 @@ export default function AskAIPage() {
                                             <button
                                                 key={ex}
                                                 onClick={() => setPrompt(ex)}
-                                                className="text-xs text-slate-400 hover:text-cyan-400 px-3 py-1.5 rounded-xl bg-white/4 hover:bg-cyan-500/10 border border-white/5 hover:border-cyan-500/30 transition-all"
+                                                className="text-xs text-slate-600 dark:text-slate-400 hover:text-cyan-400 px-3 py-1.5 rounded-xl bg-white/4 hover:bg-cyan-500/10 border border-slate-200 dark:border-white/5 hover:border-cyan-500/30 transition-all"
                                             >
                                                 {ex.length > 40 ? ex.slice(0, 40) + '…' : ex}
                                             </button>
@@ -313,28 +313,28 @@ export default function AskAIPage() {
                                     {!imageBase64 ? (
                                         <button
                                             onClick={() => fileInputRef.current?.click()}
-                                            className="w-full h-44 border-2 border-dashed border-white/10 rounded-2xl flex flex-col items-center justify-center gap-3 hover:border-purple-500/50 hover:bg-purple-500/5 transition-all group"
+                                            className="w-full h-44 border-2 border-dashed border-slate-200 dark:border-white/10 rounded-2xl flex flex-col items-center justify-center gap-3 hover:border-purple-500/50 hover:bg-purple-500/5 transition-all group"
                                         >
                                             <div className="w-14 h-14 bg-purple-500/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform border border-purple-500/20">
                                                 <ImagePlus className="w-6 h-6 text-purple-400" />
                                             </div>
                                             <div className="text-center">
-                                                <p className="text-white font-bold">Click to upload image</p>
-                                                <p className="text-slate-500 text-sm mt-1">PNG, JPG, WEBP · Max 10MB</p>
+                                                <p className="text-slate-900 dark:text-white font-bold">Click to upload image</p>
+                                                <p className="text-slate-500 dark:text-slate-500 text-sm mt-1">PNG, JPG, WEBP · Max 10MB</p>
                                             </div>
                                         </button>
                                     ) : (
-                                        <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-slate-950">
+                                        <div className="relative rounded-2xl overflow-hidden border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-950">
                                             <img src={imageBase64} alt="Uploaded question" className="w-full max-h-64 object-contain" />
                                             <button
                                                 onClick={() => { setImageBase64(null); if (fileInputRef.current) fileInputRef.current.value = ''; }}
                                                 className="absolute top-3 right-3 w-8 h-8 bg-red-500/90 hover:bg-red-500 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
                                                 aria-label="Remove image"
                                             >
-                                                <X className="w-4 h-4 text-white" />
+                                                <X className="w-4 h-4 text-slate-900 dark:text-white" />
                                             </button>
                                             <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/60 to-transparent py-3 px-4">
-                                                <p className="text-white text-sm font-medium">Image ready · AI will read this question</p>
+                                                <p className="text-slate-900 dark:text-white text-sm font-medium">Image ready · AI will read this question</p>
                                             </div>
                                         </div>
                                     )}
@@ -345,7 +345,7 @@ export default function AskAIPage() {
                                             onChange={(e) => setPrompt(e.target.value)}
                                             placeholder="Optional: Add context or a specific question about this image..."
                                             rows={2}
-                                            className="w-full bg-slate-950/60 border border-white/8 rounded-2xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-purple-500/40 transition-all resize-none text-sm"
+                                            className="w-full bg-white/60 dark:bg-slate-950/60 border border-slate-200 dark:border-white/8 rounded-2xl px-4 py-3 text-slate-900 dark:text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-purple-500/40 transition-all resize-none text-sm"
                                             disabled={isLoading}
                                         />
                                     )}
@@ -357,7 +357,7 @@ export default function AskAIPage() {
                                 <button
                                     onClick={() => handleAskAI('standard')}
                                     disabled={isLoading || !canSubmit}
-                                    className="flex items-center gap-2.5 px-7 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-2xl font-black uppercase tracking-widest text-sm transition-all shadow-xl shadow-cyan-500/20 disabled:opacity-40 disabled:cursor-not-allowed group/btn"
+                                    className="flex items-center gap-2.5 px-7 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-slate-900 dark:text-white rounded-2xl font-black uppercase tracking-widest text-sm transition-all shadow-xl shadow-cyan-500/20 disabled:opacity-40 disabled:cursor-not-allowed group/btn"
                                 >
                                     {isLoading && currentType === 'standard' ? (
                                         <>
@@ -455,15 +455,15 @@ export default function AskAIPage() {
                                                     return (
                                                         <div
                                                             key={`${msgIdx}-${idx}`}
-                                                            className="bg-slate-900/60 border border-white/8 rounded-3xl overflow-hidden shadow-lg"
+                                                            className="bg-white/60 dark:bg-slate-900/60 border border-slate-200 dark:border-white/8 rounded-3xl overflow-hidden shadow-lg"
                                                         >
-                                                            <div className={`flex items-center gap-3 px-6 py-4 border-b border-white/5 ${meta ? '' : 'bg-white/3'}`}>
+                                                            <div className={`flex items-center gap-3 px-6 py-4 border-b border-slate-200 dark:border-white/5 ${meta ? '' : 'bg-white/3'}`}>
                                                                 {meta && (
                                                                     <div className={`flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br ${meta.color} bg-opacity-10 border ${meta.badge} shadow`}>
                                                                         {meta.icon}
                                                                     </div>
                                                                 )}
-                                                                <h2 className="text-white font-black tracking-tight text-base">{sec.title || `Section ${idx + 1}`}</h2>
+                                                                <h2 className="text-slate-900 dark:text-white font-black tracking-tight text-base">{sec.title || `Section ${idx + 1}`}</h2>
                                                                 {meta && (
                                                                     <span className={`ml-auto text-[10px] font-black px-2.5 py-1 rounded-full border uppercase tracking-widest ${meta.badge}`}>
                                                                         {idx === 0 ? 'Step-by-step' : idx === 1 ? 'Simplified' : 'Answer'}
@@ -484,7 +484,7 @@ export default function AskAIPage() {
                                                 })
                                             ) : (
                                                 // Non-structured (follow-up) response
-                                                <div className="bg-slate-900/60 border border-white/8 rounded-3xl overflow-hidden shadow-lg p-6">
+                                                <div className="bg-white/60 dark:bg-slate-900/60 border border-slate-200 dark:border-white/8 rounded-3xl overflow-hidden shadow-lg p-6">
                                                     <ReactMarkdown
                                                         remarkPlugins={[remarkMath, remarkGfm]}
                                                         rehypePlugins={[rehypeKatex]}
@@ -504,7 +504,7 @@ export default function AskAIPage() {
 
                             {/* ── Follow-up Input ── */}
                             {!isLoading && (
-                                <div className="bg-slate-900/60 border border-t-[3px] border-t-cyan-500/30 border-white/8 rounded-3xl p-4 shadow-2xl sticky bottom-4 z-10 backdrop-blur-xl transition-all">
+                                <div className="bg-white/60 dark:bg-slate-900/60 border border-t-[3px] border-t-cyan-500/30 border-slate-200 dark:border-white/8 rounded-3xl p-4 shadow-2xl sticky bottom-4 z-10 backdrop-blur-xl transition-all">
                                     {activeStepContext && (
                                         <div className="flex items-center gap-2 mb-3 px-3 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 w-fit animate-in slide-in-from-left-2 duration-300">
                                             <div className="w-5 h-5 rounded-full bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-[10px] font-black text-cyan-400">
@@ -513,10 +513,10 @@ export default function AskAIPage() {
                                             <span className="text-[11px] font-bold text-cyan-400/80 uppercase tracking-wider">Discussing: {activeStepContext.label}</span>
                                             <button 
                                                 onClick={() => { setActiveStepContext(null); setFollowUpPrompt(''); }}
-                                                className="ml-2 hover:bg-white/5 p-1 rounded-md transition-colors"
+                                                className="ml-2 hover:bg-slate-100 dark:hover:bg-white/5 p-1 rounded-md transition-colors"
                                                 aria-label="Clear context"
                                             >
-                                                <X className="w-3 h-3 text-slate-500" />
+                                                <X className="w-3 h-3 text-slate-500 dark:text-slate-500" />
                                             </button>
                                         </div>
                                     )}
@@ -529,7 +529,7 @@ export default function AskAIPage() {
                                                 onChange={(e) => setFollowUpPrompt(e.target.value)}
                                                 onKeyDown={(e) => { if (e.key === 'Enter') handleAskAI('standard', true); }}
                                                 placeholder={activeStepContext ? "Ask about this step..." : "Ask a follow-up about any step..."}
-                                                className="w-full bg-slate-950/60 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/50 transition-all font-medium"
+                                                className="w-full bg-white/60 dark:bg-slate-950/60 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/50 transition-all font-medium"
                                             />
                                         </div>
                                         <button
@@ -541,28 +541,28 @@ export default function AskAIPage() {
                                             {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                                         </button>
                                     </div>
-                                    <p className="text-[10px] text-slate-500 mt-2 ml-1">AI remembers previous steps. Ask things like "Can you explain Step 2 more?"</p>
+                                    <p className="text-[10px] text-slate-500 dark:text-slate-500 mt-2 ml-1">AI remembers previous steps. Ask things like "Can you explain Step 2 more?"</p>
                                 </div>
                             )}
 
                             {/* ── Skeleton for follow-ups ── */}
                             {isLoading && (
                                 <div className="flex items-start gap-4 animate-pulse">
-                                    <div className="w-10 h-10 rounded-full bg-white/5 shrink-0" />
+                                    <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/5 shrink-0" />
                                     <div className="space-y-2 flex-1 pt-2">
-                                        <div className="h-3 bg-white/5 rounded w-full" />
-                                        <div className="h-3 bg-white/5 rounded w-5/6" />
-                                        <div className="h-3 bg-white/5 rounded w-4/6" />
+                                        <div className="h-3 bg-slate-100 dark:bg-white/5 rounded w-full" />
+                                        <div className="h-3 bg-slate-100 dark:bg-white/5 rounded w-5/6" />
+                                        <div className="h-3 bg-slate-100 dark:bg-white/5 rounded w-4/6" />
                                     </div>
                                 </div>
                             )}
 
                             {/* ── Extra Options (Only after first response) ── */}
                             {!isLoading && messages.length === 2 && currentType === 'standard' && (
-                                <div className="bg-slate-900/40 border border-white/5 rounded-2xl px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                                <div className="bg-white/40 dark:bg-slate-900/40 border border-slate-200 dark:border-white/5 rounded-2xl px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
                                     <div>
-                                        <p className="text-white font-bold text-sm">Need a different take?</p>
-                                        <p className="text-slate-500 text-xs mt-0.5">Get the same answer in another style</p>
+                                        <p className="text-slate-900 dark:text-white font-bold text-sm">Need a different take?</p>
+                                        <p className="text-slate-500 dark:text-slate-500 text-xs mt-0.5">Get the same answer in another style</p>
                                     </div>
                                     <div className="flex gap-3 sm:ml-auto flex-wrap">
                                         <button
@@ -612,8 +612,8 @@ export default function AskAIPage() {
                                 <Zap className="w-9 h-9 text-cyan-400" />
                             </div>
                             <div>
-                                <p className="text-white font-bold text-lg">Ready to solve your doubt</p>
-                                <p className="text-slate-500 text-sm mt-1">Type your question above or upload a photo to get started</p>
+                                <p className="text-slate-900 dark:text-white font-bold text-lg">Ready to solve your doubt</p>
+                                <p className="text-slate-500 dark:text-slate-500 text-sm mt-1">Type your question above or upload a photo to get started</p>
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 max-w-xl mx-auto">
                                 {[
@@ -621,10 +621,10 @@ export default function AskAIPage() {
                                     { icon: <Brain className="w-5 h-5" />, label: 'Simplified', desc: 'Easy to understand' },
                                     { icon: <CheckCircle2 className="w-5 h-5" />, label: 'Final Answer', desc: 'Direct answer highlighted' },
                                 ].map((f) => (
-                                    <div key={f.label} className="bg-slate-900/40 border border-white/5 rounded-2xl p-4 text-center">
-                                        <div className="w-10 h-10 mx-auto bg-white/5 rounded-xl flex items-center justify-center text-slate-400 mb-3">{f.icon}</div>
-                                        <p className="text-white font-bold text-sm">{f.label}</p>
-                                        <p className="text-slate-500 text-xs mt-1">{f.desc}</p>
+                                    <div key={f.label} className="bg-white/40 dark:bg-slate-900/40 border border-slate-200 dark:border-white/5 rounded-2xl p-4 text-center">
+                                        <div className="w-10 h-10 mx-auto bg-slate-100 dark:bg-white/5 rounded-xl flex items-center justify-center text-slate-600 dark:text-slate-400 mb-3">{f.icon}</div>
+                                        <p className="text-slate-900 dark:text-white font-bold text-sm">{f.label}</p>
+                                        <p className="text-slate-500 dark:text-slate-500 text-xs mt-1">{f.desc}</p>
                                     </div>
                                 ))}
                             </div>

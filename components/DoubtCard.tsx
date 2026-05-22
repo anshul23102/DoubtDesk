@@ -132,7 +132,7 @@ export default function DoubtCard({ doubt, onUpdate, onViewAISolution, role }: D
 
     return (
         <>
-            <div className="group bg-slate-900/50 border border-white/5 rounded-[2.5rem] p-8 hover:border-blue-500/30 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/5 flex flex-col h-full relative overflow-hidden">
+            <div className="group bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-white/5 rounded-[2.5rem] p-8 hover:border-blue-500/30 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/5 flex flex-col h-full relative overflow-hidden">
                 {/* Background Glow */}
                 <div className="absolute -top-24 -right-24 w-48 h-48 bg-blue-600/5 blur-[100px] rounded-full group-hover:bg-blue-600/10 transition-all duration-500"></div>
 
@@ -140,14 +140,14 @@ export default function DoubtCard({ doubt, onUpdate, onViewAISolution, role }: D
                 <div className="flex items-start justify-between mb-8">
                     <div className="flex items-center gap-4">
                         <div className="w-12 h-12 bg-blue-600/10 rounded-2xl flex items-center justify-center border border-blue-500/20 group-hover:scale-110 transition-transform duration-500">
-                            <span className="text-lg font-black text-blue-400">{doubt.userName[doubt.userName.length - 1]}</span>
+                            <span className="text-lg font-black text-blue-400">{doubt.userName?.slice(-1)?.toUpperCase() || '?'}</span>
                         </div>
                         <div>
-                            <h3 className="text-white font-bold tracking-tight text-sm">
-                                {doubt.userName}
+                            <h3 className="text-slate-900 dark:text-white font-bold tracking-tight text-sm">
+                                {doubt.userName || 'Anonymous'}
                                 {isOwner && <span className="ml-2 text-[10px] bg-blue-600/20 text-blue-400 px-2 py-0.5 rounded-full uppercase tracking-widest font-black">You</span>}
                             </h3>
-                            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">
+                            <p className="text-[10px] text-slate-500 dark:text-slate-500 font-bold uppercase tracking-widest mt-0.5">
                                 {new Date(doubt.createdAt).toLocaleDateString()}
                             </p>
                         </div>
@@ -157,11 +157,7 @@ export default function DoubtCard({ doubt, onUpdate, onViewAISolution, role }: D
                             <button
                                 onClick={handlePin}
                                 disabled={isPinning}
-                                className={`p-2 rounded-xl border transition-all ${
-                                    doubt.isPinned
-                                        ? "bg-blue-600/20 border-blue-500/40 text-blue-400"
-                                        : "bg-white/5 border-white/10 text-slate-500 hover:text-blue-400"
-                                }`}
+                                className={`p-2 rounded-xl border transition-all ${ doubt.isPinned ? "bg-blue-600/20 border-blue-500/40 text-blue-400" : "bg-white/5 border-white/10 text-slate-500 hover:text-blue-400" }`}
                                 title={doubt.isPinned ? "Unpin doubt" : "Pin doubt to top"}
                             >
                                 <Pin className={`w-4 h-4 ${doubt.isPinned ? 'fill-blue-400' : ''} ${isPinning ? 'animate-pulse' : ''}`} />
@@ -184,7 +180,7 @@ export default function DoubtCard({ doubt, onUpdate, onViewAISolution, role }: D
                                 <span className="text-[9px] font-black text-red-500 uppercase tracking-widest">Unsolved</span>
                             </div>
                         )}
-                        <div className="px-3 py-1 bg-white/5 border border-white/10 rounded-full">
+                        <div className="px-3 py-1 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-full">
                             <span className="text-[9px] font-black text-blue-400 uppercase tracking-widest">{doubt.subject}</span>
                         </div>
                     </div>
@@ -193,12 +189,12 @@ export default function DoubtCard({ doubt, onUpdate, onViewAISolution, role }: D
                 {/* Content */}
                 <div className="flex-1 space-y-6">
                     {doubt.content && (
-                        <p className="text-slate-300 text-sm leading-relaxed mb-6 font-medium line-clamp-4">
+                        <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed mb-6 font-medium line-clamp-4">
                             {doubt.content}
                         </p>
                     )}
 
-                    {doubt.tags?.length > 0 && (
+                    {(doubt.tags?.length ?? 0) > 0 && (
                         <div className="flex flex-wrap gap-2">
                             {doubt.tags.map((tag: any) => (
                                 <span
@@ -214,7 +210,7 @@ export default function DoubtCard({ doubt, onUpdate, onViewAISolution, role }: D
                     {doubt.imageUrl && (
                         <div
                             onClick={() => setIsFullscreenImageOpen(true)}
-                            className="relative rounded-2xl overflow-hidden border border-white/5 bg-slate-900 aspect-video group-hover:border-white/20 transition-colors cursor-zoom-in group/img"
+                            className="relative rounded-2xl overflow-hidden border border-slate-200 dark:border-white/5 bg-white dark:bg-slate-900 aspect-video group-hover:border-slate-300 dark:group-hover:border-white/20 transition-colors cursor-zoom-in group/img"
                         >
                             <img
                                 src={doubt.imageUrl}
@@ -229,16 +225,12 @@ export default function DoubtCard({ doubt, onUpdate, onViewAISolution, role }: D
                 </div>
 
                 {/* Footer Actions */}
-                <div className="mt-auto pt-6 border-t border-white/5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+                <div className="mt-auto pt-6 border-t border-slate-200 dark:border-white/5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
                     <div className="flex items-center gap-2.5 flex-1">
                         <button
                             onClick={() => handleAction("like")}
                             disabled={isLiking}
-                            className={`flex-1 sm:flex-none flex items-center justify-center gap-2.5 px-6 py-3 rounded-2xl transition-all group/btn ${
-                                doubt.hasLiked
-                                    ? "bg-blue-600/20 text-blue-400 border border-blue-500/30 shadow-lg shadow-blue-500/10"
-                                    : "bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white border border-white/5"
-                            }`}
+                            className={`flex-1 sm:flex-none flex items-center justify-center gap-2.5 px-6 py-3 rounded-2xl transition-all group/btn ${ doubt.hasLiked ? "bg-blue-600/20 text-blue-400 border border-blue-500/30 shadow-lg shadow-blue-500/10" : "bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white border border-white/5" }`}
                         >
                             <ThumbsUp className={`w-4 h-4 ${isLiking ? 'animate-pulse' : 'group-hover/btn:scale-110 transition-transform'} ${doubt.hasLiked ? 'fill-blue-400' : ''}`} />
                             <span className="text-xs font-black">{doubt.likes || 0}</span>
@@ -247,11 +239,7 @@ export default function DoubtCard({ doubt, onUpdate, onViewAISolution, role }: D
                         <button
                             onClick={handleBookmark}
                             disabled={isBookmarking}
-                            className={`flex items-center justify-center p-3 rounded-2xl transition-all ${
-                                doubt.hasBookmarked
-                                    ? "bg-purple-600/20 text-purple-400 border border-purple-500/30 shadow-lg shadow-purple-500/10"
-                                    : "bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white border border-white/5"
-                            }`}
+                            className={`flex items-center justify-center p-3 rounded-2xl transition-all ${ doubt.hasBookmarked ? "bg-purple-600/20 text-purple-400 border border-purple-500/30 shadow-lg shadow-purple-500/10" : "bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white border border-white/5" }`}
                             title={doubt.hasBookmarked ? "Remove bookmark" : "Add to bookmarks"}
                         >
                             <Bookmark className={`w-4 h-4 ${isBookmarking ? 'animate-pulse' : ''} ${doubt.hasBookmarked ? 'fill-purple-400' : ''}`} />
@@ -261,7 +249,7 @@ export default function DoubtCard({ doubt, onUpdate, onViewAISolution, role }: D
                             <button
                                 onClick={() => handleAction("solve")}
                                 disabled={isSolving}
-                                className="flex-1 sm:flex-none flex items-center justify-center gap-3 px-6 py-3 bg-emerald-600/10 hover:bg-emerald-600 text-emerald-500 hover:text-white rounded-2xl transition-all border border-emerald-500/20 active:scale-95 group/sol"
+                                className="flex-1 sm:flex-none flex items-center justify-center gap-3 px-6 py-3 bg-emerald-600/10 hover:bg-emerald-600 text-emerald-500 hover:text-slate-900 dark:hover:text-white rounded-2xl transition-all border border-emerald-500/20 active:scale-95 group/sol"
                             >
                                 <CheckCircle className={`w-4 h-4 ${isSolving ? 'animate-spin' : 'group-hover/sol:scale-110'}`} />
                                 <span className="text-[10px] font-black uppercase tracking-widest">Mark Solved</span>
@@ -287,11 +275,11 @@ export default function DoubtCard({ doubt, onUpdate, onViewAISolution, role }: D
 
                     <div className="flex items-center gap-2.5">
                         {(isOwner || isTeacher) && (
-                            <div className="flex items-center gap-1.5 p-1.5 bg-white/5 rounded-2xl border border-white/5 flex-1 sm:flex-none justify-center">
+                            <div className="flex items-center gap-1.5 p-1.5 bg-slate-100 dark:bg-white/5 rounded-2xl border border-slate-200 dark:border-white/5 flex-1 sm:flex-none justify-center">
                                 {isOwner && (
                                     <button
                                         onClick={() => setIsEditModalOpen(true)}
-                                        className="flex-1 sm:flex-none p-3 rounded-xl hover:bg-blue-600/20 text-slate-500 hover:text-blue-400 transition-all group/edit"
+                                        className="flex-1 sm:flex-none p-3 rounded-xl hover:bg-blue-600/20 text-slate-500 dark:text-slate-500 hover:text-blue-400 transition-all group/edit"
                                         aria-label="Edit doubt"
                                     >
                                         <Edit2 className="w-4 h-4 group-hover/edit:scale-110 transition-transform" />
@@ -299,7 +287,7 @@ export default function DoubtCard({ doubt, onUpdate, onViewAISolution, role }: D
                                 )}
                                 <button
                                     onClick={() => setIsDeleteDialogOpen(true)}
-                                    className="flex-1 sm:flex-none p-3 rounded-xl hover:bg-red-500/20 text-slate-500 hover:text-red-400 transition-all group/trash"
+                                    className="flex-1 sm:flex-none p-3 rounded-xl hover:bg-red-500/20 text-slate-500 dark:text-slate-500 hover:text-red-400 transition-all group/trash"
                                     aria-label="Delete doubt"
                                 >
                                     <Trash2 className="w-4 h-4 group-hover/trash:scale-110 transition-transform" />
@@ -308,7 +296,7 @@ export default function DoubtCard({ doubt, onUpdate, onViewAISolution, role }: D
                         )}
                         <button
                             onClick={() => setIsRepliesOpen(true)}
-                            className="flex-1 sm:flex-none flex items-center justify-center gap-3 px-6 py-3 rounded-2xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all border border-white/5 active:scale-95 group/msg"
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-3 px-6 py-3 rounded-2xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all border border-slate-200 dark:border-white/5 active:scale-95 group/msg"
                         >
                             <MessageSquare className="w-5 h-5 group-hover/msg:scale-110 transition-transform" />
                             <span className="text-xs font-black">{doubt.replyCount || 0}</span>
@@ -344,7 +332,7 @@ export default function DoubtCard({ doubt, onUpdate, onViewAISolution, role }: D
                     onClick={() => setIsFullscreenImageOpen(false)}
                 >
                     <button
-                        className="absolute top-8 right-8 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all z-[110]"
+                        className="absolute top-8 right-8 p-3 rounded-full bg-slate-200 dark:bg-white/10 hover:bg-white/20 text-slate-900 dark:text-white transition-all z-[110]"
                         onClick={(e) => { e.stopPropagation(); setIsFullscreenImageOpen(false); }}
                         aria-label="Close fullscreen view"
                     >
@@ -357,7 +345,7 @@ export default function DoubtCard({ doubt, onUpdate, onViewAISolution, role }: D
                         <img
                             src={doubt.imageUrl}
                             alt="Full View"
-                            className="max-w-full max-h-full object-contain rounded-xl shadow-2xl border border-white/10"
+                            className="max-w-full max-h-full object-contain rounded-xl shadow-2xl border border-slate-200 dark:border-white/10"
                         />
                     </div>
                 </div>
@@ -366,28 +354,28 @@ export default function DoubtCard({ doubt, onUpdate, onViewAISolution, role }: D
             {/* Premium Delete Confirmation Dialog */}
             {isDeleteDialogOpen && (
                 <div
-                    className="fixed inset-0 z-[150] flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 animate-in fade-in duration-300"
+                    className="fixed inset-0 z-[150] flex items-center justify-center bg-white/80 dark:bg-slate-950/80 backdrop-blur-md p-4 animate-in fade-in duration-300"
                     onClick={() => setIsDeleteDialogOpen(false)}
                 >
                     <div
-                        className="bg-slate-900 border border-white/10 rounded-[2.5rem] w-full max-w-md overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300"
+                        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-[2.5rem] w-full max-w-md overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="p-10 flex flex-col items-center text-center">
                             <div className="w-20 h-20 bg-red-500/10 rounded-[2rem] flex items-center justify-center mb-6 border border-red-500/20">
                                 <AlertTriangle className="w-10 h-10 text-red-500" />
                             </div>
-                            <h2 className="text-2xl font-black text-white italic tracking-tighter uppercase mb-4">
+                            <h2 className="text-2xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase mb-4">
                                 Delete <span className="text-red-500">Post?</span>
                             </h2>
-                            <p className="text-slate-400 text-sm font-medium leading-relaxed mb-8">
+                            <p className="text-slate-600 dark:text-slate-400 text-sm font-medium leading-relaxed mb-8">
                                 This action cannot be undone. Your doubt and all interactions will be permanently removed.
                             </p>
 
                             <div className="w-full flex gap-4">
                                 <button
                                     onClick={() => setIsDeleteDialogOpen(false)}
-                                    className="flex-1 py-4 bg-slate-800 hover:bg-slate-700 text-white rounded-2xl font-black uppercase tracking-widest text-xs transition-all border border-white/5 active:scale-95"
+                                    className="flex-1 py-4 bg-slate-50 dark:bg-slate-800 hover:bg-slate-700 text-slate-900 dark:text-white rounded-2xl font-black uppercase tracking-widest text-xs transition-all border border-slate-200 dark:border-white/5 active:scale-95"
                                 >
                                     Cancel
                                 </button>
@@ -397,7 +385,7 @@ export default function DoubtCard({ doubt, onUpdate, onViewAISolution, role }: D
                                     className="flex-[1.5] py-4 bg-red-600 hover:bg-red-700 text-white rounded-2xl font-black uppercase tracking-widest text-xs transition-all shadow-lg shadow-red-600/20 active:scale-95 flex items-center justify-center gap-2"
                                 >
                                     {isDeleting ? (
-                                        <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                                        <div className="w-4 h-4 border-2 border-slate-300 dark:border-white/20 border-t-white rounded-full animate-spin" />
                                     ) : (
                                         "Yes, Delete"
                                     )}

@@ -62,17 +62,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
             {/* Sidebar */}
             <aside
-                className={`
-                    fixed lg:sticky lg:top-0 lg:h-screen shrink-0
-                    inset-y-0 left-0 z-40
-                    w-72
-                    bg-background/80
-                    backdrop-blur-xl
-                    border-r border-border/60
-                    shadow-xl
-                    transform transition-all duration-300 ease-out
-                    ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-                `}
+                className={`fixed lg:sticky lg:top-0 lg:h-screen shrink-0 inset-y-0 left-0 z-40 w-72 bg-background/80 backdrop-blur-xl border-r border-border/60 shadow-xl transform transition-all duration-300 ease-out ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
             >
                 <div className="flex flex-col h-full">
 
@@ -82,7 +72,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                             href="/"
                             className="flex items-center gap-3 hover:opacity-90 transition-opacity"
                         >
-                            <div className="w-11 h-11 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-[0_0_20px_rgba(37,99,235,0.25)]">
+                            <div className="w-11 h-11 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center text-slate-900 dark:text-white font-bold text-xl shadow-[0_0_20px_rgba(37,99,235,0.25)]">
                                 D
                             </div>
 
@@ -126,13 +116,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                                         className={linkClasses(isActive)}
                                     >
                                         <Icon
-                                            className={`
-                                                w-5 h-5 transition-colors
-                                                ${isActive
-                                                    ? 'text-blue-400'
-                                                    : 'text-muted-foreground group-hover:text-foreground'
-                                                }
-                                            `}
+                                            className={`w-5 h-5 transition-colors ${isActive ? 'text-blue-400' : 'text-muted-foreground group-hover:text-foreground' }`}
                                         />
 
                                         <span className="text-sm font-semibold">

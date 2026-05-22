@@ -1,4 +1,4 @@
-n/** @type {import('next').NextConfig} */
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: [
@@ -15,6 +15,14 @@ const nextConfig = {
       "katex",
     ],
   },
+  images: {
+  remotePatterns: [
+    {
+      protocol: "https",
+      hostname: "avatars.githubusercontent.com",
+    },
+  ],
+},
 };
 
 export default nextConfig;
