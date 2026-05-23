@@ -18,6 +18,7 @@ export const usersTable = pgTable("users", {
     blockedUntil: timestamp(),
     blockCount: integer().default(0).notNull(),
     emailNotificationsEnabled: boolean().default(true).notNull(),
+    notificationPreference: varchar({ length: 50 }).default("instant").notNull(),
     createdAt: timestamp().defaultNow().notNull(),
 });
 
@@ -315,3 +316,29 @@ export const bookmarksTable = pgTable("bookmarks", {
     userEmailIndex: index("bookmark_userEmail_idx").on(table.userEmail),
     doubtIdIndex: index("bookmark_doubtId_idx").on(table.doubtId),
 }));
+
+export const pendingNotificationsTable = pgTable("pending_notifications", {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    userEmail: varchar({ length: 255 }).notNull(),
+    doubtId: integer().notNull(),
+    replyId: integer().notNull(),
+    createdAt: timestamp().defaultNow().notNull(),
+}, (table) => {
+    return {
+        userEmailIdx: index("pending_notifications_user_email_idx").on(table.userEmail),
+        /** Remove pending notifications when user, doubt, or reply is deleted. */
+        userEmailFk: foreignKey({
+            columns: [table.userEmail],
+            foreignColumns: [usersTable.email],
+        }).onDelete("cascade"),
+        doubtIdFk: foreignKey({
+            columns: [table.doubtId],
+            foreignColumns: [doubtsTable.id],
+        }).onDelete("cascade"),
+        replyIdFk: foreignKey({
+            columns: [table.replyId],
+            foreignColumns: [repliesTable.id],
+        }).onDelete("cascade"),
+    };
+});
+

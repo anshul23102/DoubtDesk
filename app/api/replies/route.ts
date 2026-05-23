@@ -143,25 +143,37 @@ export async function POST(req: Request) {
                 if (d && d.userEmail && d.userEmail !== email) {
                     const [u] = await db.select().from(usersTable).where(eq(usersTable.email, d.userEmail)).limit(1);
                     const notificationsEnabled = u ? u.emailNotificationsEnabled : true;
+                    const preference = u ? u.notificationPreference : "instant";
                     
                     if (notificationsEnabled) {
-                        const { emailNotificationLimiter } = await import("@/lib/ratelimit");
-                        const rateLimitKey = `email_notify:${doubtId}`;
-                        const limitResult = await emailNotificationLimiter.limit(rateLimitKey);
-                        
-                        if (limitResult.success) {
-                            const { sendReplyNotificationEmail } = await import("@/lib/email");
-                            // Run non-blocking in background
-                            sendReplyNotificationEmail({
-                                toEmail: d.userEmail,
+                        if (preference === "instant") {
+                            const { emailNotificationLimiter } = await import("@/lib/ratelimit");
+                            const rateLimitKey = `email_notify:${doubtId}`;
+                            const limitResult = await emailNotificationLimiter.limit(rateLimitKey);
+                            
+                            if (limitResult.success) {
+                                const { sendReplyNotificationEmail } = await import("@/lib/email");
+                                // Run non-blocking in background
+                                sendReplyNotificationEmail({
+                                    toEmail: d.userEmail,
+                                    doubtId: d.id,
+                                    doubtSubject: d.subject,
+                                    doubtContent: d.content || "",
+                                    replierName: userName,
+                                    replyContent: content || ""
+                                }).catch(err => console.error("Immediate dev mailer failed:", err));
+                            } else {
+                                console.log(`[RATE LIMIT EXCEEDED] Immediate dev notification skipped for doubt ${doubtId} to prevent spam.`);
+                            }
+                        } else if (preference === "daily" || preference === "weekly") {
+                            // Queue pending notification in dev database directly for digest testing
+                            const { pendingNotificationsTable } = await import("@/configs/schema");
+                            await db.insert(pendingNotificationsTable).values({
+                                userEmail: d.userEmail,
                                 doubtId: d.id,
-                                doubtSubject: d.subject,
-                                doubtContent: d.content || "",
-                                replierName: userName,
-                                replyContent: content || ""
-                            }).catch(err => console.error("Immediate dev mailer failed:", err));
-                        } else {
-                            console.log(`[RATE LIMIT EXCEEDED] Immediate dev notification skipped for doubt ${doubtId} to prevent spam.`);
+                                replyId: newReply[0].id,
+                            }).catch(err => console.error("Dev fallback pending notification insert failed:", err));
+                            console.log(`[DEV EMAIL] Queued reply notification for digest (${preference}) for user ${d.userEmail}`);
                         }
                     }
                 }
