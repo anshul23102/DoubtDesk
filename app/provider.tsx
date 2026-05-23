@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState, Suspense } from "react";
 
 export type AppUser = {
     id: string;
@@ -47,13 +47,23 @@ function ThemedToaster() {
     );
 }
 
+function NavigationEvents({ onChange }: { onChange: () => void }) {
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+
+    useEffect(() => {
+        onChange();
+    }, [pathname, searchParams, onChange]);
+
+    return null;
+}
+
 export function Provider({ children }: { children: React.ReactNode }) {
     const [appUser, setAppUser] = useState<AppUser | null>(null);
     const [loading, setLoading] = useState(true);
     const [isNavigating, setIsNavigating] = useState(false);
     const router = useRouter();
     const pathname = usePathname();
-    const searchParams = useSearchParams();
 
     async function refresh() {
         setLoading(true);
@@ -81,10 +91,6 @@ export function Provider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         void refresh();
     }, []);
-
-    useEffect(() => {
-        setIsNavigating(false);
-    }, [pathname, searchParams]);
 
     useEffect(() => {
             const handleAnchorClick = (event: MouseEvent) => {
@@ -126,6 +132,9 @@ export function Provider({ children }: { children: React.ReactNode }) {
     return (
         <UserContext.Provider value={{ appUser, setAppUser, loading, refresh }}>
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem storageKey="doubtdesk-theme">
+                <Suspense fallback={null}>
+                    <NavigationEvents onChange={() => setIsNavigating(false)} />
+                </Suspense>
                 <KeyboardShortcutsProvider>
                     <SessionTracker />
                     

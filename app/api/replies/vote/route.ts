@@ -14,8 +14,16 @@ export async function POST(req: Request) {
         const { replyId, userName } = data;
 
         const user = await currentUser();
-        if (!user) {
+        const authenticatedUserId = user?.id;
+
+        if (!authenticatedUserId) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
+        const { replyId } = await req.json();
+
+        if (!replyId) {
+            return NextResponse.json({ error: "Reply ID is required" }, { status: 400 });
         }
 
         // Check if reply exists
@@ -24,16 +32,16 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Reply not found" }, { status: 404 });
         }
 
-        // Check if already upvoted
+        // Check if already upvoted (store stable identity: Clerk user id)
         const existingLike = await db.select()
             .from(replyLikesTable)
-            .where(and(eq(replyLikesTable.userName, userName), eq(replyLikesTable.replyId, replyId)))
+            .where(and(eq(replyLikesTable.userName, authenticatedUserId), eq(replyLikesTable.replyId, replyId)))
             .limit(1);
 
         if (existingLike.length > 0) {
             // Unvote
             await db.delete(replyLikesTable)
-                .where(and(eq(replyLikesTable.userName, userName), eq(replyLikesTable.replyId, replyId)));
+                .where(and(eq(replyLikesTable.userName, authenticatedUserId), eq(replyLikesTable.replyId, replyId)));
             
             const updated = await db.update(repliesTable)
                 .set({ upvotes: sql`${repliesTable.upvotes} - 1` })
@@ -43,8 +51,9 @@ export async function POST(req: Request) {
             return NextResponse.json({ ...updated[0], hasUpvoted: false });
         } else {
             // Vote
+            // Insert a stable identity for the like (use Clerk `user.id`)
             await db.insert(replyLikesTable).values({
-                userName,
+                userName: authenticatedUserId,
                 replyId
             });
 
