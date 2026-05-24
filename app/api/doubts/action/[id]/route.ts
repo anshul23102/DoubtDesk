@@ -30,19 +30,21 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
         }
 
         if (action === "like") {
-            if (!userName) {
-                return NextResponse.json({ error: "User name required for like" }, { status: 400 });
+            if (!email) {
+                return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
             }
+            
+            const secureUserIdentifier = email;
 
             // Check if already liked
             const existingLike = await db.select()
                 .from(likesTable)
-                .where(and(eq(likesTable.userName, userName), eq(likesTable.doubtId, doubtId)))
+                .where(and(eq(likesTable.userName, secureUserIdentifier), eq(likesTable.doubtId, doubtId)))
                 .limit(1);
 
             if (existingLike.length > 0) {
                 await db.delete(likesTable)
-                    .where(and(eq(likesTable.userName, userName), eq(likesTable.doubtId, doubtId)));
+                    .where(and(eq(likesTable.userName, secureUserIdentifier), eq(likesTable.doubtId, doubtId)));
                 
                 const updated = await db.update(doubtsTable)
                     .set({ likes: sql`${doubtsTable.likes} - 1` })
@@ -52,7 +54,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
                 return NextResponse.json({ ...updated[0], hasLiked: false });
             } else {
                 await db.insert(likesTable).values({
-                    userName,
+                    userName: secureUserIdentifier,
                     doubtId
                 });
 
