@@ -2,6 +2,7 @@
 
 import { Github, Linkedin, Mail } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 
 export default function Footer() {
     const currentYear = new Date().getFullYear()
@@ -78,8 +79,8 @@ export default function Footer() {
                     <div className="max-w-md">
                         <Link href="/" className="inline-flex items-center gap-3 mb-5 group">
 
-                            <div className="w-11 h-11 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center text-slate-900 dark:text-white font-bold text-xl shadow-[0_0_15px_rgba(37,99,235,0.2)] transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
-                                D
+                            <div className="w-11 h-11 0  rounded-xl flex items-center justify-center text-slate-900 dark:text-white font-bold text-xl shadow-[0_0_15px_rgba(37,99,235,0.2)] transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
+                                <Image src="/logo.png" alt="DoubtDesk logo" width={35} height={35} className=" object-cover" />
                             </div>
 
                             <span className="text-2xl font-bold text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 tracking-tight transition-colors duration-300">
