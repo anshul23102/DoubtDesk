@@ -4,7 +4,7 @@ import { eq, desc, sql } from "drizzle-orm";
 import * as dotenv from "dotenv";
 dotenv.config();
 
-const db = drizzle(process.env.NEXT_PUBLIC_NEON_DB_CONNECTION_STRING!);
+const db = drizzle(process.env.NEON_DB_CONNECTION_STRING!);
 
 async function testQuery() {
   try {
