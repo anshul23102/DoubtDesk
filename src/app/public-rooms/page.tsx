@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MessageSquare, Plus, SlidersHorizontal, Loader2 } from "lucide-react";
+import { MessageSquare, Plus, SlidersHorizontal, Loader2, Bookmark } from "lucide-react";
 import AskDoubt from "@/components/AskDoubt";
 import DoubtCard from "@/components/DoubtCard";
 import DoubtSortSelect, { DoubtSortValue } from "@/components/DoubtSortSelect";
@@ -9,8 +9,10 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import useSWRInfinite from "swr/infinite";
 import { useInView } from "react-intersection-observer";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
+import { useUser } from "@clerk/nextjs";
 
 export default function PublicRoomsPage() {
+    const { isSignedIn } = useUser();
     const pathname = usePathname();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -57,8 +59,12 @@ export default function PublicRoomsPage() {
         const params = new URLSearchParams();
         
         if (filter !== "All") {
-            const subjectFilter = filter === "Others" ? appliedCustomFilter : filter;
-            if (subjectFilter) params.append("subject", subjectFilter);
+            if (filter === "Bookmarked") {
+                params.append("bookmarked", "true");
+            } else {
+                const subjectFilter = filter === "Others" ? appliedCustomFilter : filter;
+                if (subjectFilter) params.append("subject", subjectFilter);
+            }
         }
 
         if (searchQuery) {
@@ -174,7 +180,13 @@ export default function PublicRoomsPage() {
                         <SlidersHorizontal className="w-4 h-4" />
                         <span className="text-[11px] font-bold uppercase tracking-wider">Filter:</span>
                     </div>
-                    {["All", "Math", "Science", "Physics", "Chemistry", "Programming", "Others"].map((f) => (
+                    {(() => {
+                        const filtersList = ["All", "Math", "Science", "Physics", "Chemistry", "Programming", "Others"];
+                        if (isSignedIn) {
+                            filtersList.push("Bookmarked");
+                        }
+                        return filtersList;
+                    })().map((f) => (
                         <button
                             key={f}
                             onClick={() => {
@@ -187,12 +199,17 @@ export default function PublicRoomsPage() {
                                     setIsOthersActive(true);
                                 }
                             }}
-                            className={`px-5 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all duration-300 border shrink-0 ${
+                            className={`px-5 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all duration-300 border shrink-0 flex items-center gap-1.5 ${
                                 filter === f 
-                                ? "bg-blue-600 border-blue-500 text-white shadow-lg shadow-blue-600/10" 
+                                ? f === "Bookmarked"
+                                    ? "bg-blue-500/20 border-blue-500/30 text-blue-500 dark:text-blue-400 shadow-lg shadow-blue-500/5"
+                                    : "bg-blue-600 border-blue-500 text-white shadow-lg shadow-blue-600/10" 
                                 : "bg-white dark:bg-zinc-950/20 border-slate-200 dark:border-zinc-900 text-slate-500 dark:text-zinc-400 hover:bg-slate-50 dark:hover:bg-zinc-900/40"
                             }`}
                         >
+                            {f === "Bookmarked" && (
+                                <Bookmark className={`w-3.5 h-3.5 ${filter === "Bookmarked" ? "fill-blue-500 text-blue-500 dark:fill-blue-400 dark:text-blue-400" : "text-slate-400 dark:text-zinc-500"}`} />
+                            )}
                             {f}
                         </button>
                     ))}
@@ -325,15 +342,23 @@ export default function PublicRoomsPage() {
 
                     <div className="relative space-y-2 mb-6">
                         <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-                            {searchQuery ? "No matching doubts" : randomMessage.headline}{" "}
-                            <span className="text-blue-600 dark:text-blue-400">{searchQuery ? "" : randomMessage.accent}</span>
+                            {searchQuery 
+                                ? "No matching doubts" 
+                                : filter === "Bookmarked"
+                                    ? "No bookmarked doubts yet"
+                                    : randomMessage.headline}{" "}
+                            <span className="text-blue-600 dark:text-blue-400">
+                                {searchQuery ? "" : filter === "Bookmarked" ? "" : randomMessage.accent}
+                            </span>
                         </h2>
                         <p className="text-slate-500 dark:text-zinc-400 max-w-sm mx-auto text-xs font-medium leading-relaxed">
                             {searchQuery 
                                 ? `We couldn't find any doubts matching "${searchQuery}". Try a different keyword or subject.`
-                                : filter === "All"
-                                    ? randomMessage.sub
-                                    : `${filter} is wide open. Drop a doubt, and watch your classmates rally around it.`}
+                                : filter === "Bookmarked"
+                                    ? "Save important doubts by clicking the bookmark icon on any doubt card to view them here later."
+                                    : filter === "All"
+                                        ? randomMessage.sub
+                                        : `${filter} is wide open. Drop a doubt, and watch your classmates rally around it.`}
                         </p>
                     </div>
 
@@ -344,6 +369,13 @@ export default function PublicRoomsPage() {
                                 className="flex items-center gap-3 px-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold uppercase tracking-wider text-xs transition-all duration-300 shadow-md shadow-blue-600/10 active:scale-[0.98]"
                             >
                                 Clear Search
+                            </button>
+                        ) : filter === "Bookmarked" ? (
+                            <button
+                                onClick={() => setFilter("All")}
+                                className="group flex items-center gap-3 px-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold uppercase tracking-wider text-xs transition-all duration-300 shadow-md shadow-blue-600/10 active:scale-[0.98]"
+                            >
+                                Explore public doubts
                             </button>
                         ) : (
                             <button

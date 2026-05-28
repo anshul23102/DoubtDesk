@@ -21,6 +21,7 @@ export async function GET(req: Request) {
     const type = searchParams.get("type") || 'community';
     const tag = searchParams.get("tag");
     const sort = searchParams.get("sort") || "newest";
+    const bookmarked = searchParams.get("bookmarked") === "true";
 
     try {
         const user = await currentUser();
@@ -83,6 +84,18 @@ export async function GET(req: Request) {
             // Security/Privacy: AI history is personal
             if (type === 'ai' && email) {
                 conditions.push(eq(doubtsTable.userEmail, email));
+            }
+        }
+
+        if (bookmarked && email) {
+            const userBookmarks = await db.select({ doubtId: bookmarksTable.doubtId })
+                .from(bookmarksTable)
+                .where(eq(bookmarksTable.userEmail, email));
+            const bookmarkedIds = userBookmarks.map(b => b.doubtId);
+            if (bookmarkedIds.length > 0) {
+                conditions.push(inArray(doubtsTable.id, bookmarkedIds));
+            } else {
+                conditions.push(eq(doubtsTable.id, -1));
             }
         }
 

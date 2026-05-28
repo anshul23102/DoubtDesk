@@ -7,6 +7,7 @@ import DoubtRepliesModal from "./DoubtRepliesModal";
 import { toast } from "sonner";
 import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
 import { useSearchParams } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 
 interface DoubtCardProps {
     doubt: any;
@@ -17,6 +18,7 @@ interface DoubtCardProps {
 }
 
 export default function DoubtCard({ doubt, onUpdate, onViewAISolution, role, openRepliesOnMount = false }: DoubtCardProps) {
+    const { isSignedIn } = useUser();
     const [isOwner, setIsOwner] = useState(false);
     const [isLiking, setIsLiking] = useState(false);
     const [isSolving, setIsSolving] = useState(false);
@@ -263,14 +265,16 @@ export default function DoubtCard({ doubt, onUpdate, onViewAISolution, role, ope
                             <span className="text-xs font-black">{likes}</span>
                         </button>
 
-                        <button
-                            onClick={handleBookmark}
-                            disabled={isBookmarking}
-                            className={`flex items-center justify-center p-3 rounded-2xl transition-all ${ doubt.hasBookmarked ? "bg-purple-600/20 text-purple-400 border border-purple-500/30 shadow-lg shadow-purple-500/10" : "bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white border border-white/5" }`}
-                            title={doubt.hasBookmarked ? "Remove bookmark" : "Add to bookmarks"}
-                        >
-                            <Bookmark className={`w-4 h-4 ${isBookmarking ? 'animate-pulse' : ''} ${doubt.hasBookmarked ? 'fill-purple-400' : ''}`} />
-                        </button>
+                        {isSignedIn && (
+                            <button
+                                onClick={handleBookmark}
+                                disabled={isBookmarking}
+                                className={`flex items-center justify-center p-3 rounded-2xl transition-all ${ doubt.hasBookmarked ? "bg-purple-600/20 text-purple-400 border border-purple-500/30 shadow-lg shadow-purple-500/10" : "bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white border border-white/5" }`}
+                                title={doubt.hasBookmarked ? "Remove bookmark" : "Add to bookmarks"}
+                            >
+                                <Bookmark className={`w-4 h-4 ${isBookmarking ? 'animate-pulse' : ''} ${doubt.hasBookmarked ? 'fill-purple-400' : ''}`} />
+                            </button>
+                        )}
 
                         {((isOwner && doubt.type !== 'ai') || isTeacher) && doubt.isSolved !== "solved" && (
                             <button
