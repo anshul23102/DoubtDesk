@@ -27,6 +27,7 @@ type AnalyticsData = {
 }
 
 const COLORS = ["#8b5cf6", "#3b82f6", "#ec4899", "#f59e0b", "#10b981", "#06b6d4"];
+const ANALYTICS_UNAVAILABLE_MESSAGE = "Analytics are unavailable right now.";
 
 function DashboardSkeleton() {
     return (
@@ -83,9 +84,16 @@ export default function Dashboard() {
 
     if (!data) {
         return (
-            <div className="p-10 text-center text-sm text-slate-500 dark:text-zinc-400">
-                Analytics are unavailable right now.
-            </div>
+            <>
+                <SignedIn>
+                    <div role="status" className="p-10 text-center text-sm text-slate-500 dark:text-zinc-400">
+                        {ANALYTICS_UNAVAILABLE_MESSAGE}
+                    </div>
+                </SignedIn>
+                <SignedOut>
+                    <RedirectToSignIn />
+                </SignedOut>
+            </>
         );
     }
 
