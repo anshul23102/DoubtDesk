@@ -20,8 +20,8 @@ export async function GET(req: Request) {
         const email = user.primaryEmailAddress.emailAddress;
 
         // 0. Check if user is blocked
-        const { isBlocked, errorResponse } = await checkUserBlock(email);
-        if (isBlocked) return errorResponse;
+        const { isBlocked, errorResponse: blockErrorResponse } = await checkUserBlock(email);
+        if (isBlocked) return blockErrorResponse;
 
         // Fetch classrooms where user is a member
         const joinedRooms = await db

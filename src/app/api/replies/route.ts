@@ -14,19 +14,19 @@ import { createReplyNotification } from "@/lib/notifications/service";
 export async function GET(req: Request) {
     try {
         const user = await currentUser();
-        if (!user) return errorResponse("Unauthorized", 401);
-        const email = user.primaryEmailAddress?.emailAddress;
-        const authenticatedUserId = user.id;
-        if (!email) return errorResponse("Email required", 400);
+        const email = user?.primaryEmailAddress?.emailAddress;
+        const authenticatedUserId = user?.id;
 
         // 0. Check if user is blocked
-        const [dbUser] = await db.select().from(usersTable).where(eq(usersTable.email, email));
-        if (dbUser?.blockedUntil && new Date(dbUser.blockedUntil) > new Date()) {
-            const unlockDate = new Date(dbUser.blockedUntil).toDateString();
-            return errorResponse(
-                `Your account is temporarily blocked due to safety violations. Access will be restored on ${unlockDate}.`,
-                403
-            );
+        if (email) {
+            const [dbUser] = await db.select().from(usersTable).where(eq(usersTable.email, email));
+            if (dbUser?.blockedUntil && new Date(dbUser.blockedUntil) > new Date()) {
+                const unlockDate = new Date(dbUser.blockedUntil).toDateString();
+                return errorResponse(
+                    `Your account is temporarily blocked due to safety violations. Access will be restored on ${unlockDate}.`,
+                    403
+                );
+            }
         }
 
         const { searchParams } = new URL(req.url);
