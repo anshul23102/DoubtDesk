@@ -11,7 +11,7 @@ import {
 import { categorizeDoubt } from "@/lib/ai/categorizer";
 import { and, eq, inArray, isNull, or, not, sql, SQL, ilike, desc, getTableColumns } from "drizzle-orm";
 import { moderateContent, handleModerationViolation } from "@/lib/moderation";
-import { buildErrorResponse } from "@/lib/error-handler";
+import { buildErrorResponse, errorResponse, successResponse } from "@/lib/error-handler";
 import { checkUserBlock } from "@/lib/auth-utils";
 import { parseAndValidateRequest } from "@/lib/validations/validate";
 import { createDoubtSchema } from "@/lib/validations/doubt";
@@ -205,7 +205,7 @@ export async function GET(req: Request) {
             }));
         }
 
-        return NextResponse.json(doubts);
+        return successResponse(doubts);
     } catch (error) {
         const { status, body } = buildErrorResponse(error);
         return NextResponse.json(body, { status });
@@ -233,7 +233,7 @@ export async function POST(req: Request) {
             const moderation = await moderateContent(content);
             const violationError = await handleModerationViolation(email, content, moderation);
             if (violationError) {
-                return NextResponse.json({ error: violationError }, { status: 400 });
+                return errorResponse(violationError, 400);
             }
         }
 
@@ -321,7 +321,7 @@ export async function POST(req: Request) {
             }
         }
 
-        return NextResponse.json({ ...newDoubt, tags: savedTags });
+        return successResponse({ ...newDoubt, tags: savedTags });
     } catch (error) {
         const { status, body } = buildErrorResponse(error);
         return NextResponse.json(body, { status });

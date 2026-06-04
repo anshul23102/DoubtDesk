@@ -4,7 +4,7 @@ import { eq, asc, sql, and } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { moderateContent, handleModerationViolation } from "@/lib/moderation";
-import { buildErrorResponse } from "@/lib/error-handler";
+import { buildErrorResponse, errorResponse, successResponse } from "@/lib/error-handler";
 import { inngest } from "@/inngest/client";
 import { parseAndValidateRequest } from "@/lib/validations/validate";
 import { createReplySchema } from "@/lib/validations/reply";
@@ -14,10 +14,10 @@ import { createReplyNotification } from "@/lib/notifications/service";
 export async function GET(req: Request) {
     try {
         const user = await currentUser();
-        if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        if (!user) return errorResponse("Unauthorized", 401);
         const email = user.primaryEmailAddress?.emailAddress;
         const authenticatedUserId = user.id;
-        if (!email) return NextResponse.json({ error: "Email required" }, { status: 400 });
+        if (!email) return errorResponse("Email required", 400);
 
         // 0. Check if user is blocked
         const [dbUser] = await db.select().from(usersTable).where(eq(usersTable.email, email));
@@ -35,20 +35,20 @@ export async function GET(req: Request) {
         const userIdentifier = authenticatedUserId || searchParams.get("userName");
 
         if (!doubtIdStr) {
-            return NextResponse.json({ error: "Doubt ID required" }, { status: 400 });
+            return errorResponse("Doubt ID required", 400);
         }
         const doubtId = parseInt(doubtIdStr);
 
         // Security: Verify doubt visibility
         const [doubt] = await db.select().from(doubtsTable).where(eq(doubtsTable.id, doubtId));
-        if (!doubt) return NextResponse.json({ error: "Doubt not found" }, { status: 404 });
+        if (!doubt) return errorResponse("Doubt not found", 404);
 
         if (doubt.classroomId && email) {
             const [membership] = await db.select().from(membershipsTable).where(
                 and(eq(membershipsTable.userEmail, email), eq(membershipsTable.classroomId, doubt.classroomId))
             );
             if (!membership) {
-                return NextResponse.json({ error: "Access denied to this classroom's doubt replies" }, { status: 403 });
+                return errorResponse("Access denied to this classroom's doubt replies", 403);
             }
         } else if (doubt.classroomId && !email) {
             console.warn(`Anonymous user attempting to access replies for doubt ${doubtId} in classroom ${doubt.classroomId}`);
@@ -59,7 +59,7 @@ export async function GET(req: Request) {
             const isTeacher = room && email && room.teacherEmail === email;
             const isOwner = email && doubt.userEmail === email;
             if (!isTeacher && !isOwner) {
-                return NextResponse.json({ error: "Access denied" }, { status: 403 });
+                return errorResponse("Access denied", 403);
             }
         }
 
@@ -78,7 +78,7 @@ export async function GET(req: Request) {
             }));
         }
 
-        return NextResponse.json(repliesWithVotes);
+        return successResponse(repliesWithVotes);
     } catch (error) {
         const { status, body } = buildErrorResponse(error);
         return NextResponse.json(body, { status });
@@ -93,9 +93,9 @@ export async function POST(req: Request) {
         const { doubtId, userName, type, content, imageUrl } = data;
 
         const user = await currentUser();
-        if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        if (!user) return errorResponse("Unauthorized", 401);
         const email = user.primaryEmailAddress?.emailAddress;
-        if (!email) return NextResponse.json({ error: "Email required" }, { status: 400 });
+        if (!email) return errorResponse("Email required", 400);
 
         // 0. Check if user is blocked
         const [dbUser] = await db.select().from(usersTable).where(eq(usersTable.email, email));
@@ -112,7 +112,7 @@ export async function POST(req: Request) {
             const moderation = await moderateContent(content);
             const violationError = await handleModerationViolation(email, content, moderation);
             if (violationError) {
-                return NextResponse.json({ error: violationError }, { status: 400 });
+                return errorResponse(violationError, 400);
             }
         }
 
@@ -120,7 +120,7 @@ export async function POST(req: Request) {
         const [doubt] = await db.select().from(doubtsTable).where(eq(doubtsTable.id, doubtId));
         
         if (!doubt) {
-            return NextResponse.json({ error: "Doubt not found" }, { status: 404 });
+            return errorResponse("Doubt not found", 404);
         }
 
         if (doubt.classroomId) {
@@ -128,14 +128,14 @@ export async function POST(req: Request) {
                 and(eq(membershipsTable.userEmail, email), eq(membershipsTable.classroomId, doubt.classroomId))
             );
             if (!membership) {
-                return NextResponse.json({ error: "Access denied to this classroom" }, { status: 403 });
+                return errorResponse("Access denied to this classroom", 403);
             }
         }
 
         if (doubt.type === 'teacher') {
             const [room] = await db.select().from(classroomsTable).where(eq(classroomsTable.id, doubt.classroomId!));
             if (room && email && room.teacherEmail !== email) {
-                return NextResponse.json({ error: "Only the teacher can reply to this doubt" }, { status: 403 });
+                return errorResponse("Only the teacher can reply to this doubt", 403);
             }
         }
 
@@ -251,7 +251,7 @@ export async function POST(req: Request) {
             }
         }
 
-        return NextResponse.json(newReply[0]);
+        return successResponse(newReply[0]);
     } catch (error) {
         const { status, body } = buildErrorResponse(error);
         return NextResponse.json(body, { status });

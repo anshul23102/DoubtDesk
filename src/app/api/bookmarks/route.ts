@@ -5,12 +5,13 @@ import { doubtsTable, bookmarksTable, likesTable, repliesTable } from "@/configs
 import { and, eq, desc, sql, inArray } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
+import { buildErrorResponse, errorResponse, successResponse } from "@/lib/error-handler";
 
 export async function GET(req: Request) {
     try {
         const user = await currentUser();
         const email = user?.primaryEmailAddress?.emailAddress;
-        if (!email) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        if (!email) return errorResponse("Unauthorized", 401);
 
         // Get bookmarked doubt IDs
         const bookmarks = await db.select({ doubtId: bookmarksTable.doubtId })
@@ -18,7 +19,7 @@ export async function GET(req: Request) {
             .where(eq(bookmarksTable.userEmail, email));
 
         if (bookmarks.length === 0) {
-            return NextResponse.json([]);
+            return successResponse([]);
         }
 
         const doubtIds = bookmarks.map(b => b.doubtId);
@@ -54,9 +55,10 @@ export async function GET(req: Request) {
             replyCount: countsMap[doubt.id] || 0
         }));
 
-        return NextResponse.json(doubts);
+        return successResponse(doubts);
     } catch (error) {
         console.error("Error fetching bookmarks:", error);
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        const { status, body } = buildErrorResponse(error);
+        return NextResponse.json(body, { status });
     }
 }

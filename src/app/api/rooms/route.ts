@@ -4,7 +4,7 @@ import { classroomsTable, membershipsTable, usersTable } from '@/configs/schema'
 import { eq, and, notInArray } from 'drizzle-orm';
 import { currentUser } from '@clerk/nextjs/server';
 import { checkUserBlock } from '@/lib/auth-utils';
-import { buildErrorResponse } from '@/lib/error-handler';
+import { buildErrorResponse, errorResponse, successResponse } from '@/lib/error-handler';
 import { parseAndValidateRequest } from '@/lib/validations/validate';
 import { createClassroomSchema } from '@/lib/validations/classroom';
 import { Classroom } from '@/types';
@@ -14,7 +14,7 @@ export async function GET(req: Request) {
     try {
         const user = await currentUser();
         if (!user || !user.primaryEmailAddress?.emailAddress) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+            return errorResponse('Unauthorized', 401);
         }
 
         const email = user.primaryEmailAddress.emailAddress;
@@ -64,7 +64,7 @@ if (dbUser && dbUser.university && dbUser.year) {
         .where(and(...conditions));
 }
 
-        return NextResponse.json({
+        return successResponse({
             joined: joinedRooms,
             recommended: recommendedRooms,
         });
@@ -84,7 +84,7 @@ export async function POST(req: Request) {
 
         const user = await currentUser();
         if (!user || !user.primaryEmailAddress?.emailAddress) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+            return errorResponse('Unauthorized', 401);
         }
 
         const email = user.primaryEmailAddress.emailAddress;
@@ -96,7 +96,7 @@ export async function POST(req: Request) {
         // Final check for teacher/admin role in DB
         const [dbUser] = await db.select().from(usersTable).where(eq(usersTable.email, email));
         if (!dbUser || (dbUser.role !== 'teacher' && dbUser.role !== 'admin')) {
-            return NextResponse.json({ error: 'Only teachers can create classrooms' }, { status: 403 });
+            return errorResponse('Only teachers can create classrooms', 403);
         }
 
         const inviteCode = Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -123,7 +123,7 @@ export async function POST(req: Request) {
             return room;
         });
 
-        return NextResponse.json(newRoom);
+        return successResponse(newRoom);
     } catch (error) {
         const { status, body } = buildErrorResponse(error);
         return NextResponse.json(body, { status });
