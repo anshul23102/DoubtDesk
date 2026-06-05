@@ -78,8 +78,26 @@ const socialLinks = [
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
-const scrollToTop = () => {
-  document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
+const scrollToTop = (event: React.MouseEvent) => {
+  if (
+    event.defaultPrevented ||
+    event.button !== 0 ||
+    event.metaKey ||
+    event.ctrlKey ||
+    event.shiftKey ||
+    event.altKey
+  ) {
+    return;
+  }
+
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  window.scrollTo({
+    top: 0,
+    behavior: prefersReducedMotion ? "auto" : "smooth",
+  });
 };
 
   const socialLinks = [
