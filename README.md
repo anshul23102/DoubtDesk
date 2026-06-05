@@ -160,14 +160,13 @@ Joins/Creates a Classroom (via invite code)
 
 > Screenshots are located in the `screenshots/` directory and will be updated as the UI evolves.
 
-[![Landing Page](https://github.com/navyamittal2245/DoubtDesk/blob/c6c7b24540c613b9b71ee825ba36e1b15d7eb617/screenshots/screenshot-1780079477082.png)
+![Landing Page](https://github.com/navyamittal2245/DoubtDesk/blob/c6c7b24540c613b9b71ee825ba36e1b15d7eb617/screenshots/screenshot-1780079477082.png)
 
+![AI Solver](https://github.com/navyamittal2245/DoubtDesk/blob/858dfb0064c6c67287e5892bba0fd4824a591f9a/screenshots/ai%20solver%20ss%20updated.png)
 
-[![AI Solver](https://github.com/knoxiboy/DoubtDesk/raw/main/screenshots/ai-solver.png)](https://github.com/knoxiboy/DoubtDesk/blob/main/screenshots/ai-solver.png)
+![Classroom View](https://github.com/navyamittal2245/DoubtDesk/blob/858dfb0064c6c67287e5892bba0fd4824a591f9a/screenshots/classroom%20ss%20updated.png)
 
-[![Classroom View](https://github.com/knoxiboy/DoubtDesk/raw/main/screenshots/classroom.png)](https://github.com/knoxiboy/DoubtDesk/blob/main/screenshots/classroom.png)
-
-[![Analytics Dashboard](https://github.com/knoxiboy/DoubtDesk/raw/main/screenshots/analytics.png)](https://github.com/knoxiboy/DoubtDesk/blob/main/screenshots/analytics.png)
+![Analytics Dashboard](https://github.com/navyamittal2245/DoubtDesk/blob/858dfb0064c6c67287e5892bba0fd4824a591f9a/screenshots/dashboard%20screenshot.png)
 
 ---
 
