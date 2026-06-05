@@ -266,7 +266,7 @@ describe('Doubts API Endpoints', () => {
                 content: 'New doubt'
             })
         });
-        const res = await POST(req);
+        const res = (await POST(req))!;
         const json = await res.json();
         expect(res.status).toBe(200);
         expect(json.id).toBe(2);
