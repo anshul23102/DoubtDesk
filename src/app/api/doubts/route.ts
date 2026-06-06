@@ -48,7 +48,7 @@ export async function GET(req: Request) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const conditions: SQL[] = [];
+        const conditions: SQL[] = [isNull(doubtsTable.deletedAt)];
 
         if (classroomId) {
             conditions.push(eq(doubtsTable.classroomId, classroomId));
