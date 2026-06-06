@@ -35,7 +35,6 @@ export async function GET(req: Request) {
         }
 
         const classroomFilter = eq(doubtsTable.classroomId, classroomId);
-
         // 1. Top Confusion Topics (by total doubt count) — unchanged
         const topTopics = await db
             .select({
