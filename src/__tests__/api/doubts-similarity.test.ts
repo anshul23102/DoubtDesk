@@ -2,6 +2,7 @@ import { currentUser } from "@clerk/nextjs/server";
 
 import { POST } from "@/app/api/doubts/check-similarity/route";
 import { getAnonymousQuotaIdentifier } from "@/lib/request-identity";
+import { getSafeErrorDetails } from "@/lib/safe-error-details";
 
 jest.mock("@clerk/nextjs/server", () => ({
   currentUser: jest.fn(),
@@ -86,6 +87,21 @@ describe("Doubt similarity API endpoint", () => {
     });
 
     expect(getAnonymousQuotaIdentifier(req)).toBe("ip:203.0.113.7");
+  });
+
+  it("keeps sensitive provider metadata out of error logs", () => {
+    const error = {
+      message: "provider failed",
+      code: "ETIMEDOUT",
+      response: { status: 503, config: { headers: { Authorization: "secret" } } },
+      config: { headers: { Authorization: "secret" } },
+    };
+
+    expect(getSafeErrorDetails(error)).toEqual({
+      message: "provider failed",
+      status: 503,
+      code: "ETIMEDOUT",
+    });
   });
 
   it("requires authentication for classroom similarity checks", async () => {

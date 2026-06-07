@@ -6,24 +6,7 @@ import {
     buildAiProviderErrorResponse,
     enforceAiAvailability,
 } from "@/lib/ai/kill-switch";
-
-function getSafeErrorDetails(error: unknown) {
-    if (typeof error !== "object" || error === null) {
-        return { message: String(error) };
-    }
-
-    const candidate = error as {
-        message?: unknown;
-        status?: unknown;
-        code?: unknown;
-    };
-
-    return {
-        message: typeof candidate.message === "string" ? candidate.message : undefined,
-        status: typeof candidate.status === "number" ? candidate.status : undefined,
-        code: typeof candidate.code === "string" ? candidate.code : undefined,
-    };
-}
+import { getSafeErrorDetails } from "@/lib/safe-error-details";
 
 export async function POST(req: NextRequest) {
     try {

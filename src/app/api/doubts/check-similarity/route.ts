@@ -9,6 +9,7 @@ import {
 } from "@/lib/ai/kill-switch";
 import { buildErrorResponse } from "@/lib/error-handler";
 import { getAnonymousQuotaIdentifier } from "@/lib/request-identity";
+import { getSafeErrorDetails } from "@/lib/safe-error-details";
 import {
   parseOptionalClassroomId,
   requireAuth,
@@ -110,7 +111,7 @@ Do not include any explanation or markdown.`;
         max_tokens: 300,
       });
     } catch (err) {
-      console.error("Groq API failed:", err);
+      console.error("Groq API failed:", getSafeErrorDetails(err));
       return buildAiProviderErrorResponse(err);
     }
 
