@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { MessageSquare, ThumbsUp, CheckCircle, Edit2, Trash2, X, ZoomIn, AlertTriangle, Pin, Bookmark, Clock, Loader2, Link2 } from "lucide-react";
+import { MessageSquare, ThumbsUp, CheckCircle, Edit2, Trash2, X, ZoomIn, AlertTriangle, Pin, Bookmark, Clock, Loader2, Link2, Share2, Copy, Send } from "lucide-react";
 import AskDoubt from "./AskDoubt";
 import DoubtRepliesModal from "./DoubtRepliesModal";
 import { toast } from "sonner";
@@ -9,6 +9,7 @@ import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
 import type { Doubt, Tag } from "@/types";
 import { useSearchParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 
 interface DoubtCardProps {
     doubt: Doubt & {
@@ -169,10 +170,22 @@ export default function DoubtCard({ doubt, onUpdate, onViewAISolution, role, ope
         }
     };
 
+    const getShareUrl = () => `${window.location.origin}/doubts/${doubt.id}`;
+
     const handleShare = () => {
-        const url = `${window.location.origin}/doubts/${doubt.id}`;
-        navigator.clipboard.writeText(url);
+        navigator.clipboard.writeText(getShareUrl());
         toast.success("Link copied!");
+    };
+
+    const handleWhatsAppShare = () => {
+        const text = encodeURIComponent(`Check out this doubt on DoubtDesk:\n\n${getShareUrl()}`);
+        window.open(`https://api.whatsapp.com/send?text=${text}`, "_blank");
+    };
+
+    const handleTelegramShare = () => {
+        const url = encodeURIComponent(getShareUrl());
+        const text = encodeURIComponent(`Check out this doubt on DoubtDesk:`);
+        window.open(`https://t.me/share/url?url=${url}&text=${text}`, "_blank");
     };
 
     return (
@@ -309,14 +322,31 @@ export default function DoubtCard({ doubt, onUpdate, onViewAISolution, role, ope
                                 </button>
                             )}
 
-                            <button
-                                onClick={handleShare}
-                                className="flex items-center justify-center p-3 rounded-2xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white border border-white/5 transition-all"
-                                title="Share doubt"
-                                aria-label="Share doubt"
-                            >
-                                <Link2 className="w-4 h-4" />
-                            </button>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <button
+                                        className="flex items-center justify-center p-3 rounded-2xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white border border-white/5 transition-all outline-none"
+                                        title="Share doubt"
+                                        aria-label="Share doubt"
+                                    >
+                                        <Share2 className="w-4 h-4" />
+                                    </button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="w-48 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl shadow-xl p-2 z-50">
+                                    <DropdownMenuItem onClick={handleShare} className="flex items-center gap-2 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg p-2 transition-colors">
+                                        <Copy className="w-4 h-4 text-slate-500" />
+                                        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Copy Link</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={handleWhatsAppShare} className="flex items-center gap-2 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg p-2 transition-colors">
+                                        <MessageSquare className="w-4 h-4 text-emerald-500" />
+                                        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Share on WhatsApp</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={handleTelegramShare} className="flex items-center gap-2 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg p-2 transition-colors">
+                                        <Send className="w-4 h-4 text-blue-500" />
+                                        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Share on Telegram</span>
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
 
                             {((isOwner && doubt.type !== 'ai') || isTeacher) && doubt.isSolved !== "solved" && (
                                 <button
