@@ -249,9 +249,6 @@ describe('Doubts API Endpoints', () => {
 });
 
     it('GET should support most-replied sorting', async () => {
-        (db.select as jest.Mock).mockImplementationOnce(() => createChainWithData([{ count: 2 }]))
-                                .mockImplementationOnce(() => createChainWithData([mockDoubts[0], mockDoubts[1]]));
-
         const req = new Request('http://localhost/api/doubts?subject=Physics&sort=most-replied');
         const res = await GET(req) as Response;
         const json = await res.json();
@@ -345,3 +342,4 @@ describe('Doubts API Endpoints', () => {
         expect(json.subject).toBe('Physics');
     });
 });
+
