@@ -514,6 +514,12 @@ jobs:
             if (context.eventName === 'pull_request_target' && payload.action === 'closed') {
               const merged = payload.pull_request.merged;
               
+              const { data: labels } = await github.rest.issues.listLabelsOnIssue({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: number,
+              });
+
               if (merged === true) {
                 await github.rest.issues.addLabels({
                   owner: context.repo.owner,
@@ -522,32 +528,43 @@ jobs:
                   labels: ['gssoc:approved', 'quality:clean'],
                 });
                 console.log(`PR #${number} merged — added approval labels.`);
-              }
 
-              const { data: labels } = await github.rest.issues.listLabelsOnIssue({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: number,
-              });
+                const transientLabels = ['review-needed', 'needs-maintainer-approval'];
+                for (const label of labels) {
+                  const shouldRemove =
+                    label.name.startsWith('size/') ||
+                    transientLabels.includes(label.name);
 
-              const transientLabels = ['review-needed', 'needs-maintainer-approval'];
-              for (const label of labels) {
-                const shouldRemove =
-                  label.name.startsWith('size/') ||
-                  transientLabels.includes(label.name);
+                  if (!shouldRemove) continue;
 
-                if (!shouldRemove) continue;
+                  try {
+                    await github.rest.issues.removeLabel({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      issue_number: number,
+                      name: label.name,
+                    });
+                    console.log(`Removed transient label: ${label.name}`);
+                  } catch (e) {
+                    console.log(`Failed to remove ${label.name}: ${e.message}`);
+                  }
+                }
+              } else {
+                const keepLabels = ['duplicate', 'invalid', 'already-implemented'];
+                for (const label of labels) {
+                  if (keepLabels.includes(label.name)) continue;
 
-                try {
-                  await github.rest.issues.removeLabel({
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    issue_number: number,
-                    name: label.name,
-                  });
-                  console.log(`Removed transient label: ${label.name}`);
-                } catch (e) {
-                  console.log(`Failed to remove ${label.name}: ${e.message}`);
+                  try {
+                    await github.rest.issues.removeLabel({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      issue_number: number,
+                      name: label.name,
+                    });
+                    console.log(`Removed label from unmerged PR: ${label.name}`);
+                  } catch (e) {
+                    console.log(`Failed to remove ${label.name}: ${e.message}`);
+                  }
                 }
               }
               return;

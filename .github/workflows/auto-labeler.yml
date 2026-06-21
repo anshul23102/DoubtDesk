@@ -47,7 +47,7 @@ jobs:
             // ── 2. Duplicate / Invalid Label closing (idempotent) ─────────
             if (
               payload.action === 'labeled' &&
-              (payload.label.name === 'duplicate' || payload.label.name === 'invalid')
+              (payload.label.name === 'duplicate' || payload.label.name === 'invalid' || payload.label.name === 'already-implemented')
             ) {
               const labelName = payload.label.name;
               const typeStr = isPR ? 'pull request' : 'issue';
@@ -72,9 +72,14 @@ jobs:
                 return;
               }
 
-              const message = labelName === 'duplicate'
-                ? `${marker}\nThis ${typeStr} has been marked as a **duplicate** of an existing one. Closing to keep our tracker organized.\n\n*(Maintainers: To state which issue this duplicates, use \`/duplicate #123\` in a comment!)*`
-                : `${marker}\nThis ${typeStr} has been marked as **invalid**. This usually means it does not follow our contributing guidelines, is out of scope, or lacks necessary information.`;
+              let message = '';
+              if (labelName === 'duplicate') {
+                message = `${marker}\nThis ${typeStr} has been marked as a **duplicate** of an existing one. Closing to keep our tracker organized.\n\n*(Maintainers: To state which issue this duplicates, use \`/duplicate #123\` in a comment!)*`;
+              } else if (labelName === 'already-implemented') {
+                message = `${marker}\nThis ${typeStr} has been closed because the requested features or bug fixes are **already implemented** in the repository.`;
+              } else {
+                message = `${marker}\nThis ${typeStr} has been marked as **invalid**. This usually means it does not follow our contributing guidelines, is out of scope, or lacks necessary information.`;
+              }
 
               // Set labels to just the one label
               await github.rest.issues.setLabels({
