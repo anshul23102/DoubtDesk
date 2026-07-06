@@ -51,7 +51,7 @@ export async function GET(req: Request) {
       .from(membershipsTable)
       .where(eq(membershipsTable.userEmail, email));
 
-    const userClassroomIds = userMemberships.map((m) => m.classroomId);
+    const userClassroomIds = userMemberships.map((m: (typeof userMemberships)[number]) => m.classroomId);
 
     if (userClassroomIds.length === 0) {
       return NextResponse.json({
@@ -179,7 +179,7 @@ export async function GET(req: Request) {
     ]);
 
     // 8. AI Teaching Suggestions & Weak Concept Detection (Heuristics)
-    const weakTopics = mostAskedTopics.map((topic, index) => {
+    const weakTopics = mostAskedTopics.map((topic: (typeof mostAskedTopics)[number], index: number) => {
       const countValue = Number(topic.count);
       let suggestion = "";
 
@@ -254,8 +254,8 @@ export async function GET(req: Request) {
         totalReplies: totalReplies[0]?.count || 0,
       },
       solvedStats,
-      weakTopics: weakTopics.filter((t) => t.severity !== "Low"),
-      topContributors: topContributors.map((c) => ({
+      weakTopics: weakTopics.filter((t: (typeof weakTopics)[number]) => t.severity !== "Low"),
+      topContributors: topContributors.map((c: (typeof topContributors)[number]) => ({
         name: c.name,
         replyCount: Number(c.replyCount),
       })),
@@ -271,7 +271,7 @@ export async function GET(req: Request) {
 
     csv += "\nStatus,Count\n";
 
-    analyticsData.solvedStats.forEach((stat) => {
+    analyticsData.solvedStats.forEach((stat: (typeof analyticsData.solvedStats)[number]) => {
       let label = "Unknown";
 
       if (stat.status === "solved") {
@@ -286,12 +286,12 @@ export async function GET(req: Request) {
     });
 
     csv += "\nContributor Name,Reply Count\n";
-    analyticsData.topContributors.forEach((contributor) => {
+    analyticsData.topContributors.forEach((contributor: (typeof analyticsData.topContributors)[number]) => {
       csv += `${contributor.name},${contributor.replyCount}\n`;
     });
 
     csv += "\nWeak Topic,Doubt Count,Severity\n";
-    analyticsData.weakTopics.forEach((topic) => {
+    analyticsData.weakTopics.forEach((topic: (typeof analyticsData.weakTopics)[number]) => {
       csv += `${topic.subject},${topic.count},${topic.severity}\n`;
     });
 

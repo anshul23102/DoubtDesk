@@ -139,12 +139,12 @@ export async function findSemanticDuplicates(params: {
 
 
   const filtered = rows
-    .filter((r) => typeof r.similarity === "number" && r.similarity >= similarityThreshold)
-    .sort((a, b) => (b.similarity ?? 0) - (a.similarity ?? 0));
+    .filter((r: (typeof rows)[number]) => typeof r.similarity === "number" && r.similarity >= similarityThreshold)
+    .sort((a: (typeof rows)[number], b: (typeof rows)[number]) => (b.similarity ?? 0) - (a.similarity ?? 0));
 
   const solvedReplyIds = filtered
-    .filter((d) => d.isSolved === "solved" && d.solvedReplyId)
-    .map((d) => d.solvedReplyId as number);
+    .filter((d: (typeof filtered)[number]) => d.isSolved === "solved" && d.solvedReplyId)
+    .map((d: (typeof filtered)[number]) => d.solvedReplyId as number);
 
   const solvedReplies =
     solvedReplyIds.length > 0
@@ -155,10 +155,10 @@ export async function findSemanticDuplicates(params: {
       : [];
 
   const replyMap = new Map<number, string | null>(
-    solvedReplies.map((r) => [r.id, r.content]),
+    solvedReplies.map((r: (typeof solvedReplies)[number]): [number, string | null] => [r.id, r.content]),
   );
 
-  return filtered.map((d) => ({
+  return filtered.map((d: (typeof filtered)[number]) => ({
     id: d.id,
     subject: d.subject,
     content: d.content,

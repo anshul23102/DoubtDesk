@@ -132,17 +132,20 @@ export async function GET(request: Request) {
         .groupBy(doubtsTable.classroomId);
 
         // Build mapping helpers
-        const studentCountMap = new Map(studentCounts.map(c => [c.classroomId, c.count]));
-        const doubtStatsMap = new Map(doubtStats.map(d => [d.classroomId, d]));
-        const pedagogyStatsMap = new Map(pedagogyStats.map(p => [p.classroomId, p]));
-        const alertsCountMap = new Map(activeAlertsPerClassroom.map(a => [a.classroomId, a.count]));
-        const resolutionTimeMap = new Map(resolutionTimes.map(r => [r.classroomId, r.avgTimeMins]));
+        type DoubtStatsRow = { classroomId: number | null; total: number; solved: number };
+        type PedagogyStatsRow = { classroomId: number | null; totalReplies: number; driftedReplies: number };
 
-        const classroomHealth = classrooms.map(classroom => {
+        const studentCountMap = new Map<number | null, number>(studentCounts.map((c: (typeof studentCounts)[number]) => [c.classroomId, c.count]));
+        const doubtStatsMap = new Map<number | null, DoubtStatsRow>(doubtStats.map((d: (typeof doubtStats)[number]) => [d.classroomId, d as DoubtStatsRow]));
+        const pedagogyStatsMap = new Map<number | null, PedagogyStatsRow>(pedagogyStats.map((p: (typeof pedagogyStats)[number]) => [p.classroomId, p as PedagogyStatsRow]));
+        const alertsCountMap = new Map<number | null, number>(activeAlertsPerClassroom.map((a: (typeof activeAlertsPerClassroom)[number]) => [a.classroomId, a.count]));
+        const resolutionTimeMap = new Map<number | null, number>(resolutionTimes.map((r: (typeof resolutionTimes)[number]) => [r.classroomId, r.avgTimeMins]));
+
+        const classroomHealth = classrooms.map((classroom: (typeof classrooms)[number]) => {
             const cId = classroom.id;
             const enrolledStudents = studentCountMap.get(cId) || 0;
-            const dStats = doubtStatsMap.get(cId) || { total: 0, solved: 0 };
-            const pStats = pedagogyStatsMap.get(cId) || { totalReplies: 0, driftedReplies: 0 };
+            const dStats: DoubtStatsRow = doubtStatsMap.get(cId) || { classroomId: cId, total: 0, solved: 0 };
+            const pStats: PedagogyStatsRow = pedagogyStatsMap.get(cId) || { classroomId: cId, totalReplies: 0, driftedReplies: 0 };
             const alertsCount = alertsCountMap.get(cId) || 0;
             const avgResolutionTime = resolutionTimeMap.get(cId) || 0;
 

@@ -125,7 +125,7 @@ export async function GET(req: Request) {
         .select({ doubtId: bookmarksTable.doubtId })
         .from(bookmarksTable)
         .where(eq(bookmarksTable.userEmail, email));
-      const bookmarkedIds = userBookmarks.map((b) => b.doubtId);
+      const bookmarkedIds = userBookmarks.map((b: (typeof userBookmarks)[number]) => b.doubtId);
       if (bookmarkedIds.length > 0) {
         conditions.push(inArray(doubtsTable.id, bookmarkedIds));
       } else {
@@ -206,8 +206,8 @@ export async function GET(req: Request) {
         .from(likesTable)
         .where(eq(likesTable.userEmail, email));
 
-      const likedIds = new Set(userLikes.map((l) => l.doubtId));
-      doubts = doubts.map((doubt) => ({
+      const likedIds = new Set(userLikes.map((l: (typeof userLikes)[number]) => l.doubtId));
+      doubts = doubts.map((doubt: (typeof doubts)[number]) => ({
         ...doubt,
         hasLiked: likedIds.has(doubt.id),
       }));
@@ -219,8 +219,8 @@ export async function GET(req: Request) {
         .from(bookmarksTable)
         .where(eq(bookmarksTable.userEmail, email));
 
-      const bookmarkedIds = new Set(userBookmarks.map((b) => b.doubtId));
-      doubts = doubts.map((doubt) => ({
+      const bookmarkedIds = new Set(userBookmarks.map((b: (typeof userBookmarks)[number]) => b.doubtId));
+      doubts = doubts.map((doubt: (typeof doubts)[number]) => ({
         ...doubt,
         hasBookmarked: bookmarkedIds.has(doubt.id),
       }));
@@ -236,11 +236,11 @@ export async function GET(req: Request) {
         })
         .from(doubtTagsTable)
         .innerJoin(tagsTable, eq(doubtTagsTable.tagId, tagsTable.id))
-        .where(inArray(doubtTagsTable.doubtId, doubts.map((d) => d.id)));
+        .where(inArray(doubtTagsTable.doubtId, doubts.map((d: (typeof doubts)[number]) => d.id)));
 
-      const tagsByDoubt = tagRows.reduce<
+      const tagsByDoubt = (tagRows as (typeof tagRows)[number][]).reduce<
         Record<number, { id: number; name: string; normalizedName: string }[]>
-      >((acc, row) => {
+      >((acc: Record<number, { id: number; name: string; normalizedName: string }[]>, row: (typeof tagRows)[number]) => {
         acc[row.doubtId] = acc[row.doubtId] || [];
         acc[row.doubtId].push({
           id: row.id,
@@ -250,7 +250,7 @@ export async function GET(req: Request) {
         return acc;
       }, {});
 
-      doubts = doubts.map((doubt) => ({
+      doubts = doubts.map((doubt: (typeof doubts)[number]) => ({
         ...doubt,
         tags: tagsByDoubt[doubt.id] || [],
       }));
@@ -261,7 +261,7 @@ export async function GET(req: Request) {
     // Strip author identifiers (userEmail), the internal embedding vector and
     // soft-delete marker before returning. Only the anonymized handle and a
     // session-derived `isOwnPost` flag are exposed. See src/lib/anonymity.ts.
-    const publicDoubts = doubts.map((doubt) => toPublicDoubt(doubt, email));
+    const publicDoubts = doubts.map((doubt: (typeof doubts)[number]) => toPublicDoubt(doubt, email));
 
     return NextResponse.json({
       doubts: publicDoubts,
@@ -411,7 +411,9 @@ export async function POST(req: Request) {
           ),
         );
 
-      const existingTagsMap = new Map(existingClassroomTags.map((t) => [t.normalizedName, t]));
+      const existingTagsMap = new Map<string, typeof tagsTable.$inferSelect>(
+        existingClassroomTags.map((t: (typeof existingClassroomTags)[number]): [string, typeof tagsTable.$inferSelect] => [t.normalizedName, t]),
+      );
       const tagsToInsert: (typeof tagsTable.$inferInsert)[] = [];
 
       for (const name of normalizedTags) {

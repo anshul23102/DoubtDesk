@@ -114,7 +114,7 @@ export async function POST(req: Request) {
 
     const doubtList = recentDoubts
       .map(
-        (d, i) =>
+        (d: (typeof recentDoubts)[number], i: number) =>
           `[${i}] Subject: ${d.subject} | Content: ${(d.content || "").slice(0, 150)}`,
       )
       .join("\n");
@@ -185,8 +185,8 @@ Do not include any explanation or markdown.`;
             .where(inArray(repliesTable.id, solvedReplyIds))
         : [];
 
-    const replyMap = new Map(
-      solvedReplies.map((reply) => [reply.id, reply.content]),
+    const replyMap = new Map<number, string | null>(
+      solvedReplies.map((reply: (typeof solvedReplies)[number]): [number, string | null] => [reply.id, reply.content]),
     );
 
     for (const match of highMatches) {

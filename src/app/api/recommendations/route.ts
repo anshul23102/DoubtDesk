@@ -48,7 +48,7 @@ export async function GET() {
             .where(eq(membershipsTable.userEmail, email));
 
         const joinedIds = joinedMemberships.map(
-            (membership) => membership.classroomId
+            (membership: (typeof joinedMemberships)[number]) => membership.classroomId
         );
 
         // 4. Fetch all candidate classrooms
@@ -58,7 +58,7 @@ const classrooms = await db
     .where(
         joinedIds.length
             ? sql`${classroomsTable.id} NOT IN (${sql.join(
-                  joinedIds.map((id) => sql`${id}`),
+                  joinedIds.map((id: (typeof joinedIds)[number]) => sql`${id}`),
                   sql`, `
               )})`
             : sql`true`
@@ -90,14 +90,14 @@ const classrooms = await db
             .groupBy(doubtsTable.classroomId);
 
         const memberCountMap = Object.fromEntries(
-            memberCounts.map((item) => [
+            memberCounts.map((item: (typeof memberCounts)[number]) => [
                 item.classroomId,
                 item.count,
             ])
         );
 
         const activityCountMap = Object.fromEntries(
-            activityCounts.map((item) => [
+            activityCounts.map((item: (typeof activityCounts)[number]) => [
                 item.classroomId,
                 item.count,
             ])
@@ -105,7 +105,7 @@ const classrooms = await db
 
         // 7. Generate recommendations
         const recommendations = classrooms
-            .map((classroom) => {
+            .map((classroom: (typeof classrooms)[number]) => {
                 const score = calculateRecommendationScore({
                     universityMatch:
                         classroom.university === currentDbUser.university,
@@ -133,7 +133,7 @@ const classrooms = await db
                 };
             })
             .sort(
-                (a, b) =>
+                (a: { recommendationScore: number }, b: { recommendationScore: number }) =>
                     b.recommendationScore -
                     a.recommendationScore
             )
