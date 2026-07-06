@@ -348,7 +348,7 @@ export async function handleModerationViolation(
         }
 
        const newViolationCount = updated.violationCount;
-       const isThirdViolation = newViolationCount >= 3;
+       const isThirdViolation = newViolationCount === 3;
 
         let blockedUntil: Date | null = updated.blockedUntil || null;
         let newBlockCount = updated.blockCount || 0;
@@ -369,6 +369,7 @@ export async function handleModerationViolation(
                     isBlocked: true,
                     blockedUntil,
                     blockCount: newBlockCount,
+                    violationCount: 0,
                 })
                 .where(eq(usersTable.email, email));
 
