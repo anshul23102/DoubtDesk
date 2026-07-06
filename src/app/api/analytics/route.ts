@@ -55,7 +55,7 @@ export async function GET(req: Request) {
                 .from(classroomsTable)
                 .where(eq(classroomsTable.organizationId, orgId));
 
-            activeClassroomIds = orgClassrooms.map(c => c.id);
+            activeClassroomIds = orgClassrooms.map((c: (typeof orgClassrooms)[number]) => c.id);
         } 
         // 2. CLASSROOM LEVEL SCOPING
         else if (classroomId !== null) {
@@ -67,7 +67,7 @@ export async function GET(req: Request) {
             const userMemberships = await db.select({ classroomId: membershipsTable.classroomId })
                 .from(membershipsTable)
                 .where(eq(membershipsTable.userEmail, email));
-            activeClassroomIds = userMemberships.map(m => m.classroomId);
+            activeClassroomIds = userMemberships.map((m: (typeof userMemberships)[number]) => m.classroomId);
         }
 
         // Return empty state if no classrooms are found for the given scope
@@ -199,7 +199,7 @@ export async function GET(req: Request) {
         ]);
         
         // 8. AI Teaching Suggestions & Weak Concept Detection (Heuristics)
-        const weakTopics = mostAskedTopics.map((topic, index) => {
+        const weakTopics = mostAskedTopics.map((topic: (typeof mostAskedTopics)[number], index: number) => {
             const countValue = Number(topic.count);
             let suggestion = "";
 
@@ -264,8 +264,8 @@ export async function GET(req: Request) {
                 ...engagement[0],
                 totalReplies: totalReplies[0]?.count || 0
             },
-            weakTopics: weakTopics.filter(t => t.severity !== 'Low'),
-            topContributors: topContributors.map(c => ({ name: c.name, replyCount: Number(c.replyCount) })),
+            weakTopics: weakTopics.filter((t: (typeof weakTopics)[number]) => t.severity !== 'Low'),
+            topContributors: topContributors.map((c: (typeof topContributors)[number]) => ({ name: c.name, replyCount: Number(c.replyCount) })),
             classroomSettings,
             recentAIReplies: recentAIReplies || []
         });

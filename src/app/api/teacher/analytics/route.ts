@@ -29,8 +29,8 @@ export async function GET(req: NextRequest) {
             .from(membershipsTable)
             .where(eq(membershipsTable.userEmail, email));
         const teacherMembershipIds = teacherMemberships
-            .filter((membership) => ["teacher", "owner", "admin"].includes(membership.role))
-            .map((membership) => membership.classroomId);
+            .filter((membership: (typeof teacherMemberships)[number]) => ["teacher", "owner", "admin"].includes(membership.role))
+            .map((membership: (typeof teacherMemberships)[number]) => membership.classroomId);
         
         const isTeacherOrAdmin =
             dbUser?.role === 'teacher' ||
@@ -92,7 +92,7 @@ export async function GET(req: NextRequest) {
             }
             selectedClassroomIds = [classroomId];
         } else {
-            selectedClassroomIds = classroomsList.map(c => c.id);
+            selectedClassroomIds = classroomsList.map((c: (typeof classroomsList)[number]) => c.id);
         }
 
         // 5. Query and Aggregate Data

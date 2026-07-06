@@ -88,11 +88,11 @@ export async function GET(req: Request) {
             email.toLowerCase().trim() === normalizedOwnerEmail;
 
         const processedMembers = canViewEmails
-            ? members.map(({ id, ...m }) => ({
+            ? members.map(({ id, ...m }: (typeof members)[number]) => ({
                 ...m,
                 isOwner: isOwnerEmail(m.userEmail),
             }))
-            : members.map((m) => ({
+            : members.map((m: (typeof members)[number]) => ({
                 displayName: `${m.role.toLowerCase() === 'student' ? 'Student' : 'Member'}_${m.id}`,
                 role: m.role,
                 joinedAt: m.joinedAt,

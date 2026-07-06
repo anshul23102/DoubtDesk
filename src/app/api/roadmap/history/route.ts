@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
             .orderBy(desc(roadmapsTable.createdAt));
 
         // Parse JSON strings back to objects for the frontend
-        const parsedHistory = history.map(item => ({
+        const parsedHistory = history.map((item: (typeof history)[number]) => ({
             ...item,
             roadmapData: JSON.parse(item.roadmapData)
         }));

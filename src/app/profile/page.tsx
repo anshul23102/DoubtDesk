@@ -61,7 +61,7 @@ export default async function ProfilePage() {
     if (userResult.length > 0) {
       dbUser = userResult[0];
       // Enforce the correct karmaScore parameter mapping to clear the database validation flag
-      karmaScore = dbUser.karmaScore || 0;
+      karmaScore = dbUser?.karmaScore || 0;
     }
 
     // Run parallel aggregations 
