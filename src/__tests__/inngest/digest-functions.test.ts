@@ -15,6 +15,13 @@ jest.mock("@/lib/email", () => ({
   sendDigestEmail: jest.fn(),
 }));
 
+// Mock inngest client
+jest.mock("@/inngest/client", () => ({
+  inngest: {
+    createFunction: jest.fn((config, handler) => handler),
+  },
+}));
+
 // Minimal drizzle-orm stubs
 jest.mock("drizzle-orm", () => ({
   eq: jest.fn((_col: unknown, val: unknown) => ({ col: _col, val })),
@@ -146,7 +153,7 @@ describe("sendDailyDigest — per-user step isolation", () => {
 
     const deleteChain = { where: jest.fn().mockResolvedValue(undefined) };
     (dbMock.delete as jest.Mock).mockReturnValue(deleteChain);
-    mockSendDigestEmail.mockResolvedValue(undefined);
+    mockSendDigestEmail.mockResolvedValue({ success: true });
 
     const { sendDailyDigest } = await import("@/inngest/functions");
 

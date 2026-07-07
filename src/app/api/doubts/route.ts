@@ -236,11 +236,11 @@ export async function GET(req: Request) {
         })
         .from(doubtTagsTable)
         .innerJoin(tagsTable, eq(doubtTagsTable.tagId, tagsTable.id))
-        .where(inArray(doubtTagsTable.doubtId, doubts.map((d: any) => d.id)));
+        .where(inArray(doubtTagsTable.doubtId, doubts.map((d: any) => d.id))) as Array<{ doubtId: number; id: number; name: string; normalizedName: string }>;
 
       const tagsByDoubt = tagRows.reduce<
         Record<number, { id: number; name: string; normalizedName: string }[]>
-      >((acc, row) => {
+      >((acc, row: { doubtId: number; id: number; name: string; normalizedName: string }) => {
         acc[row.doubtId] = acc[row.doubtId] || [];
         acc[row.doubtId].push({
           id: row.id,
@@ -399,7 +399,7 @@ export async function POST(req: Request) {
     const savedTags: (typeof tagsTable.$inferSelect)[] = [];
 
     if (normalizedTags.length > 0) {
-      const existingClassroomTags = await db
+      const existingClassroomTags = (await db
         .select()
         .from(tagsTable)
         .where(
@@ -409,9 +409,9 @@ export async function POST(req: Request) {
               ? eq(tagsTable.classroomId, parsedClassroomId)
               : isNull(tagsTable.classroomId),
           ),
-        );
+        )) as Array<typeof tagsTable.$inferSelect>;
 
-      const existingTagsMap = new Map(existingClassroomTags.map((t: any) => [t.normalizedName, t]));
+      const existingTagsMap = new Map(existingClassroomTags.map((t) => [t.normalizedName, t]));
       const tagsToInsert: (typeof tagsTable.$inferInsert)[] = [];
 
       for (const name of normalizedTags) {
