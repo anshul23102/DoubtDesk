@@ -2,7 +2,7 @@ import {
   generateInviteToken,
   getInviteExpiry,
   hashInviteToken,
-} from "@/lib/invite-token";
+} from "@/lib/invites/invite-token";
 
 describe("invite token utilities", () => {
   it("generates non-empty unique invite tokens", () => {
