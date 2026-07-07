@@ -1,51 +1,54 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/configs/db";
 import { doubtsTable } from "@/configs/schema";
-import { eq, and } from "drizzle-orm";
+import { eq, and, isNull } from "drizzle-orm";
+import { requireAuth, requireMembership, parseClassroomId } from "@/lib/auth/membership-guard";
+import { toPublicDoubt } from "@/lib/anonymity";
+import { buildErrorResponse } from "@/lib/error-handler";
 
 export async function GET(req: NextRequest) {
     try {
+        const { email } = await requireAuth();
+
         const { searchParams } = new URL(req.url);
-        const classroomId = searchParams.get("classroomId");
+        const classroomIdParam = searchParams.get("classroomId");
         const subject = searchParams.get("subject");
 
-        if (!classroomId) {
+        if (!classroomIdParam) {
             return NextResponse.json({ error: "classroomId is required" }, { status: 400 });
         }
 
-        const classroomIdInt = parseInt(classroomId);
-        if (isNaN(classroomIdInt)) {
-            return NextResponse.json({ error: "Invalid classroomId" }, { status: 400 });
+        const classroomId = parseClassroomId(classroomIdParam);
+
+        // Only members of the classroom (or its teacher) may view its doubts.
+        await requireMembership(email, classroomId);
+
+        const conditions = [
+            eq(doubtsTable.classroomId, classroomId),
+            isNull(doubtsTable.deletedAt),
+        ];
+
+        if (subject && subject !== "All") {
+            conditions.push(eq(doubtsTable.subject, subject));
         }
 
-        const where = subject && subject !== "All"
-            ? and(eq(doubtsTable.classroomId, classroomIdInt), eq(doubtsTable.subject, subject))
-            : eq(doubtsTable.classroomId, classroomIdInt);
-
         const doubts = await db
-            .select({
-                id: doubtsTable.id,
-                subject: doubtsTable.subject,
-                content: doubtsTable.content,
-                likes: doubtsTable.likes,
-                isSolved: doubtsTable.isSolved,
-                createdAt: doubtsTable.createdAt,
-            })
+            .select()
             .from(doubtsTable)
-            .where(where)
+            .where(and(...conditions))
             .orderBy(doubtsTable.createdAt)
             .limit(100);
 
+        // Strip author identifiers before returning — see src/lib/anonymity.ts.
+        const publicDoubts = doubts.map((doubt) => toPublicDoubt(doubt, email));
+
         return NextResponse.json({
             success: true,
-            data: doubts,
-            count: doubts.length,
+            data: publicDoubts,
+            count: publicDoubts.length,
         });
     } catch (error) {
-        console.error("Filter endpoint error:", error);
-        return NextResponse.json(
-            { error: "Internal Server Error" },
-            { status: 500 }
-        );
+        const { status, body } = buildErrorResponse(error);
+        return NextResponse.json(body, { status });
     }
 }
