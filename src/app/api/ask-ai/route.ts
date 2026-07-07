@@ -78,19 +78,16 @@ export async function POST(req: Request): Promise<NextResponse> {
     }
   }
 
-  let classroomId: number | undefined;
-  if (body.classroomId !== undefined && body.classroomId !== null) {
-    const raw = body.classroomId;
-    if (typeof raw !== "number" || !Number.isInteger(raw)) {
-      return NextResponse.json(
-        { error: "Invalid classroomId.", code: "INVALID_CLASSROOM_ID" },
-        { status: 422 }
-      );
-    }
-    classroomId = raw;
+  const raw = body.classroomId;
+  if (typeof raw !== "number" || !Number.isInteger(raw)) {
+    return NextResponse.json(
+      { error: "classroomId is required and must be a valid integer.", code: "INVALID_CLASSROOM_ID" },
+      { status: 422 }
+    );
   }
+  const classroomId = raw;
 
-  if (classroomId !== undefined) {
+  {
     const [userRow] = await db
       .select({ blockedUntil: usersTable.blockedUntil })
       .from(usersTable)
