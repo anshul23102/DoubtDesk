@@ -196,7 +196,10 @@ export default function RoomsPage() {
 
                         {appUser?.role === 'student' && (
                             <div className="max-w-5xl mx-auto">
-                                <RecommendedClassrooms />
+                                <RecommendedClassrooms onJoin={async (code) => {
+                                    setJoinCode(code);
+                                    setIsJoinModalOpen(true);
+                                }} />
                             </div>
                         )}
                     </div>
@@ -215,7 +218,10 @@ export default function RoomsPage() {
 
                         {appUser?.role === 'student' && (
                             <div className="pt-8 border-t border-slate-100 dark:border-zinc-900">
-                                <RecommendedClassrooms />
+                                <RecommendedClassrooms onJoin={async (code) => {
+                                    setJoinCode(code);
+                                    setIsJoinModalOpen(true);
+                                }} />
                             </div>
                         )}
                     </div>
