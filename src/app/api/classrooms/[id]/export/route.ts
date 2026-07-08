@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/configs/db";
 import { doubtsTable, classroomsTable, repliesTable } from "@/configs/schema";
 import { and, eq, desc, gte, lte, sql, isNull } from "drizzle-orm";
-import { buildErrorResponse } from "@/lib/error-handler";
+import { buildErrorResponse } from "@/lib/errors/error-handler";
 import {
     parseClassroomId,
     requireAuth,
@@ -75,10 +75,10 @@ export async function GET(
             .groupBy(repliesTable.doubtId);
 
         const countsMap = Object.fromEntries(
-            replyCounts.map((r: (typeof replyCounts)[number]) => [r.doubtId, r.count])
+            replyCounts.map((r: any) => [r.doubtId, r.count])
         );
 
-        const doubtsWithReplies = doubts.map((doubt: (typeof doubts)[number]) => ({
+        const doubtsWithReplies = doubts.map((doubt: any) => ({
             ...doubt,
             replyCount: countsMap[doubt.id] || 0,
         }));

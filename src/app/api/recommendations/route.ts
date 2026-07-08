@@ -10,7 +10,7 @@ import {
     doubtsTable,
 } from "@/configs/schema";
 
-import { calculateRecommendationScore } from "@/lib/recommendation";
+import { calculateRecommendationScore } from "@/lib/ai/recommendation";
 
 export async function GET() {
     try {
@@ -48,7 +48,7 @@ export async function GET() {
             .where(eq(membershipsTable.userEmail, email));
 
         const joinedIds = joinedMemberships.map(
-            (membership: (typeof joinedMemberships)[number]) => membership.classroomId
+            (membership) => membership.classroomId
         );
 
         // 4. Fetch all candidate classrooms
@@ -58,7 +58,7 @@ const classrooms = await db
     .where(
         joinedIds.length
             ? sql`${classroomsTable.id} NOT IN (${sql.join(
-                  joinedIds.map((id: (typeof joinedIds)[number]) => sql`${id}`),
+                  joinedIds.map((id: any) => sql`${id}`),
                   sql`, `
               )})`
             : sql`true`
@@ -90,14 +90,14 @@ const classrooms = await db
             .groupBy(doubtsTable.classroomId);
 
         const memberCountMap = Object.fromEntries(
-            memberCounts.map((item: (typeof memberCounts)[number]) => [
+            memberCounts.map((item: any) => [
                 item.classroomId,
                 item.count,
             ])
         );
 
         const activityCountMap = Object.fromEntries(
-            activityCounts.map((item: (typeof activityCounts)[number]) => [
+            activityCounts.map((item: any) => [
                 item.classroomId,
                 item.count,
             ])
@@ -105,7 +105,7 @@ const classrooms = await db
 
         // 7. Generate recommendations
         const recommendations = classrooms
-            .map((classroom: (typeof classrooms)[number]) => {
+            .map((classroom: any) => {
                 const score = calculateRecommendationScore({
                     universityMatch:
                         classroom.university === currentDbUser.university,
@@ -133,7 +133,7 @@ const classrooms = await db
                 };
             })
             .sort(
-                (a: { recommendationScore: number }, b: { recommendationScore: number }) =>
+                (a, b) =>
                     b.recommendationScore -
                     a.recommendationScore
             )
