@@ -67,14 +67,14 @@ export async function POST(
         let updatedReply;
 
         try {
-            updatedReply = await db.transaction(async (tx: any) => {
-                
+            updatedReply = await db.transaction(async (tx) => {
+
                 // A. FIX: Standardized column input across all vote handlers to use the stable identifier.
-                // Note: If your Drizzle schema explicitly names the column field `userName`, we map the unique 
+                // Note: If your Drizzle schema explicitly names the column field `userName`, we map the unique
                 // email string directly into it to preserve the unique multi-column compound index layout.
-                await tx.insert(replyLikesTable).values({ 
+                await tx.insert(replyLikesTable).values({
                     userEmail: stableUserIdentifier,
-                    replyId 
+                    replyId
                 });
 
                 // B. Bound atomic counter increment linked tightly to the validated thread mapping
