@@ -13,7 +13,7 @@ import {
     moderationLogsTable
 } from "@/configs/schema";
 import { count, eq, and, gte, sql, desc, isNotNull, isNull } from "drizzle-orm";
-import { successResponse, buildErrorResponse } from "@/lib/error-handler";
+import { successResponse, buildErrorResponse } from "@/lib/errors/error-handler";
 
 export async function GET(request: Request) {
     try {

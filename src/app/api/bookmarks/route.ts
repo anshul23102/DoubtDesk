@@ -5,7 +5,7 @@ import { doubtsTable, bookmarksTable, likesTable, repliesTable } from "@/configs
 import { and, eq, desc, sql, inArray, isNull } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
-import { buildErrorResponse, errorResponse } from "@/lib/error-handler";
+import { buildErrorResponse, errorResponse } from "@/lib/errors/error-handler";
 
 export async function GET(req: Request) {
     try {

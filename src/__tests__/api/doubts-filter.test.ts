@@ -10,7 +10,7 @@ jest.mock('@/lib/auth/membership-guard', () => ({
     parseClassroomId: (value: unknown) => {
         const n = Number(value);
         if (!Number.isSafeInteger(n) || n <= 0) {
-            const { ApiError } = jest.requireActual('@/lib/error-handler');
+            const { ApiError } = jest.requireActual('@/lib/errors/error-handler');
             throw new ApiError(400, 'Invalid classroom ID');
         }
         return n;
@@ -18,7 +18,7 @@ jest.mock('@/lib/auth/membership-guard', () => ({
 }));
 
 import { requireAuth, requireMembership } from '@/lib/auth/membership-guard';
-import { ApiError } from '@/lib/error-handler';
+import { ApiError } from '@/lib/errors/error-handler';
 
 const selectResultQueue: any[] = [];
 

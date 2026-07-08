@@ -25,20 +25,20 @@ import {
   getTableColumns,
   count,
 } from "drizzle-orm";
-import { moderateContent, handleModerationViolation } from "@/lib/moderation";
-import { buildErrorResponse, errorResponse } from "@/lib/error-handler";
-import { checkUserBlock } from "@/lib/auth-utils";
+import { moderateContent, handleModerationViolation } from "@/lib/moderation/moderation";
+import { buildErrorResponse, errorResponse } from "@/lib/errors/error-handler";
+import { checkUserBlock } from "@/lib/auth/auth-utils";
 import { parseAndValidateRequest } from "@/lib/validations/validate";
 import { createDoubtSchema } from "@/lib/validations/doubt";
 import { createClassroomDoubtNotifications } from "@/lib/notifications/service";
 import { inngest } from "@/inngest/client";
-import { enforceApiRateLimit } from "@/lib/api-rate-limit";
-import { generalLimiter } from "@/lib/ratelimit";
-import { buildRankOrder } from "@/lib/search";
+import { enforceApiRateLimit } from "@/lib/ratelimit/api-rate-limit";
+import { generalLimiter } from "@/lib/ratelimit/ratelimit";
+import { buildRankOrder } from "@/lib/search/search";
 import { canTeach } from "@/lib/auth/membership-guard";
 import { currentUser } from "@clerk/nextjs/server";
-import { parsePositiveInt } from "@/lib/utils";
-import { toPublicDoubt } from "@/lib/anonymity";
+import { parsePositiveInt } from "@/lib/utils/utils";
+import { toPublicDoubt } from "@/lib/anonymity/anonymity";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
