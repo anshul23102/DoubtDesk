@@ -381,7 +381,6 @@ export async function POST(req: Request) {
           .where(eq(doubtsTable.id, newDoubt.id));
       }
     } catch (err) {
-      console.error("Failed to generate/store doubt embedding:", err);
     }
 
     if (parsedClassroomId) {
@@ -390,7 +389,6 @@ export async function POST(req: Request) {
           name: "doubt/created",
           data: { classroomId: parsedClassroomId, doubtId: newDoubt.id },
         })
-        .catch((err) => console.error("Inngest background worker exception:", err));
 
       createClassroomDoubtNotifications({
         classroomId: parsedClassroomId,
@@ -399,7 +397,6 @@ export async function POST(req: Request) {
         authorEmail: email,
         authorName: user.fullName || email,
         doubtType,
-      }).catch((err) => console.error("Notification trigger async failure:", err));
     }
 
     const normalizedTags: string[] = Array.from(

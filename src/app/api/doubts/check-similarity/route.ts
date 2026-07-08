@@ -82,7 +82,6 @@ export async function POST(req: Request) {
         return NextResponse.json({ similarDoubts });
       }
     } catch (err) {
-      console.error("Embedding similarity path failed, falling back to LLM:", err);
     }
 
     const recentDoubts = await db
@@ -141,7 +140,6 @@ Do not include any explanation or markdown.`;
         max_tokens: 300,
       });
     } catch (err) {
-      console.error("Groq API failed:", getSafeErrorDetails(err));
       return buildAiProviderErrorResponse(err);
     }
 
@@ -160,7 +158,6 @@ Do not include any explanation or markdown.`;
           )
         : [];
     } catch {
-      console.error("Failed to parse Groq similarity response:", raw);
       return NextResponse.json({ similarDoubts: [] });
     }
 

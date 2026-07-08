@@ -318,7 +318,6 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
 
         return NextResponse.json({ error: "Invalid action" }, { status: 400 });
     } catch (error) {
-        console.error("Error updating doubt:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }
@@ -359,7 +358,6 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
         await db.update(doubtsTable).set({ deletedAt: new Date() }).where(eq(doubtsTable.id, doubtId));
         return NextResponse.json({ message: "Doubt deleted successfully" });
     } catch (error) {
-        console.error("Error deleting doubt:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }
