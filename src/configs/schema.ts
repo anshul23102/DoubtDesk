@@ -119,6 +119,7 @@ export const doubtsTable = pgTable("doubts", {
     solvedReplyId: integer(),
     type: varchar({ length: 20 }).default("community"),
     isPinned: boolean().default(false),
+    isHidden: boolean("isHidden").default(false).notNull(),
     deletedAt: timestamp(),
     createdAt: timestamp().defaultNow().notNull(),
 
@@ -263,6 +264,27 @@ export const moderationLogsTable = pgTable("moderation_logs", {
         columns: [table.userEmail],
         foreignColumns: [usersTable.email],
     }).onDelete("set null"),
+}));
+
+export const contentFlagsTable = pgTable("content_flags", {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    doubtId: integer("doubt_id").notNull(),
+    reporterEmail: varchar("reporter_email", { length: 255 }).notNull(),
+    reason: varchar({ length: 20 }).notNull(),
+    status: varchar({ length: 20 }).default("open").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+}, (table) => ({
+    doubtIdIndex: index("content_flags_doubtId_idx").on(table.doubtId),
+    createdAtIndex: index("content_flags_createdAt_idx").on(table.createdAt),
+    doubtIdFk: foreignKey({
+        columns: [table.doubtId],
+        foreignColumns: [doubtsTable.id],
+    }).onDelete("cascade"),
+    reporterEmailFk: foreignKey({
+        columns: [table.reporterEmail],
+        foreignColumns: [usersTable.email],
+    }).onDelete("cascade"),
+    uniqueFlagPerReporter: unique("content_flags_doubtId_reporterEmail_unique").on(table.doubtId, table.reporterEmail),
 }));
 
 export const auditLogsTable = pgTable("audit_logs", {

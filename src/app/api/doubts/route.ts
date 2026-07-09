@@ -96,6 +96,14 @@ export async function GET(req: Request) {
         ? or(not(eq(doubtsTable.type, "teacher")), eq(doubtsTable.userEmail, email))
         : not(eq(doubtsTable.type, "teacher"));
       if (teacherCondition) conditions.push(teacherCondition);
+
+      // Doubts auto-hidden or hidden by moderation stay visible to teachers
+      // for review, but are excluded from the student-facing feed. The
+      // original poster can still see their own hidden doubt.
+      const hiddenCondition = email
+        ? or(eq(doubtsTable.isHidden, false), eq(doubtsTable.userEmail, email))
+        : eq(doubtsTable.isHidden, false);
+      if (hiddenCondition) conditions.push(hiddenCondition);
     }
 
     if (subject && subject !== "All") {
