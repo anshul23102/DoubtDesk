@@ -263,7 +263,7 @@ export async function GET(req: Request) {
     }
 
     if (doubts.length > 0) {
-      const tagRows = await db
+      const tagRows: { doubtId: number; id: number; name: string; normalizedName: string }[] = await db
         .select({
           doubtId: doubtTagsTable.doubtId,
           id: tagsTable.id,
@@ -452,7 +452,7 @@ export async function POST(req: Request) {
       const tagsToInsert: (typeof tagsTable.$inferInsert)[] = [];
 
       for (const name of normalizedTags) {
-        const match = existingTagsMap.get(name);
+        const match = existingTagsMap.get(name) as typeof tagsTable.$inferInsert | undefined;
         if (match) {
           savedTags.push(match as typeof tagsTable.$inferSelect);
         } else {
